@@ -2,7 +2,7 @@
   "reps": {
     "less-barking": 1,
     "chill-out-settle": 1,
-    "less-reactivity-dogs": 6
+    "less-reactivity-dogs": 7
   },
   "tasks": {},
   "feeding": {
@@ -14,6 +14,6 @@
       }
     }
   },
-  "lastSync": null,
+  "lastSync": "2026-04-18T15:24:59.688Z",
   "user": "Matteo"
 }
