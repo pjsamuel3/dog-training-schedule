@@ -235,6 +235,38 @@ Useful for recreating the process, showing a client the progression, or starting
 
 ---
 
+## Phase 9 — Journey expandable schedule
+
+**Prompt 25 — Journey expand**
+> Add to the spec, the ability to go back over the schedule and see what we have already and what is upcoming.
+
+*Result: SPEC.md updated with Journey expandable schedule section. Each week row gains an expand/collapse toggle — current week auto-expanded, past weeks muted, future weeks full-colour. Built and shipped in PR #13.*
+
+---
+
+**Prompt 26 — Plan audit**
+> What is on the plan vs the spec? Can you update the plan and track accordingly.
+
+*Result: PLAN.md audited against SPEC.md — family notes marked done, Journey expandable added as tracked item. Both items then shipped.*
+
+---
+
+## Phase 10 — Trainer mode, templates, and three-tier views
+
+**Prompt 27 — Trainer mode and templates**
+> I would like to use the same spec process but use the same underlying data model. Another feature, I want templates for the trainer mode to send to the dog owners to fill in feedback and also vice versa so the trainer can gather feedback based on the schedule tasks to report back to the feedback folder.
+
+*Result: Full spec written for Trainer mode + three WhatsApp templates (plan, feedback request, in-app feedback form that commits to GitHub). PM → UI Designer → Engineer process followed.*
+
+---
+
+**Prompt 28 — Three-tier model correction**
+> I want a simple view for a user, default view for user and advanced view for trainer. My spec was a bit off to start with. Can you fix?
+
+*Result: Spec restructured into three tiers — Simple (default, one task + "Done it!" button), Advanced (full tabbed app, toggled from Simple), Trainer (read-only + templates, toggled from ⚙ Settings). All three built and shipped in PR #14.*
+
+---
+
 ## How to recreate this for a new dog/owner
 
 1. Fork or clone `pjsamuel3/dog-training-schedule` into a new repo under the trainer's GitHub account
