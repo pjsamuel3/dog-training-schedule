@@ -579,6 +579,42 @@
   .view-young-child .btn-done          { width: 100%; justify-content: center; margin-top: .25rem; }
   .view-young-child .task-tip          { display: none; }
 
+  /* ── Sync status pill ───────────────────────────────────────── */
+  .sync-pill {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: .7rem; color: var(--muted);
+    padding: .15rem .5rem; border-radius: var(--r-pill);
+    opacity: 0; pointer-events: none;
+    transition: opacity .4s, color .3s;
+    white-space: nowrap;
+  }
+  .sync-pill.syncing { color: var(--accent); opacity: 1; }
+  .sync-pill.error   { color: var(--blush);  opacity: 1; }
+  .sync-pill.synced  { opacity: .55; }
+  .sync-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  @keyframes sync-pulse { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
+  .sync-pill.syncing .sync-dot { animation: sync-pulse .9s ease-in-out infinite; }
+
+  /* ── Trainer feedback (in progress cards) ────────────────────── */
+  .progress-feedback {
+    margin-top: .65rem;
+    padding: .55rem .85rem;
+    background: var(--blush-bg);
+    border-left: 3px solid var(--blush);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: var(--text-sm);
+  }
+  .feedback-label {
+    font-size: var(--text-xs); font-weight: 600;
+    color: var(--blush); text-transform: uppercase;
+    letter-spacing: .06em; display: block; margin-bottom: .2rem;
+  }
+  .feedback-text { color: var(--ink); font-style: italic; line-height: 1.55; }
+  .feedback-date { color: var(--muted); font-size: var(--text-xs); margin-top: .25rem; display: block; }
+
   /* ── Display / ambient mode ──────────────────────────────────── */
   .display-mode .app-header,
   .display-mode main,
@@ -645,6 +681,7 @@
     <li><a href="#feeding">Feeding</a></li>
     <li><a href="#calendar">Journey</a></li>
   </ul>
+  <span id="syncPill" class="sync-pill"><span class="sync-dot"></span><span id="syncPillText"></span></span>
   <button class="user-chip" onclick="showPicker()" aria-label="Switch family member">
     <span class="user-chip-avatar" id="navAvatarInitial">?</span>
     <span id="navChipName">Who are you?</span>
@@ -977,6 +1014,7 @@ function logRep(id) {
   saveState({ reps });
   renderToday();
   renderProgress();
+  scheduleSyncPush();
 }
 
 function toggleDone(id) {
@@ -987,6 +1025,7 @@ function toggleDone(id) {
   tasks[key][id] = !tasks[key][id];
   saveState({ tasks });
   renderToday();
+  scheduleSyncPush();
 }
 
 // ── Progress ──────────────────────────────────────────────────
@@ -1033,6 +1072,15 @@ function renderProgress() {
         + '<span>' + (graduated ? 'Goal reached!' : (obj.targetReps - total) + ' to go') + '</span></div>'
       + '<div class="stage-dots">' + dots + '</div>'
       + (!graduated ? '<p class="progress-stage-detail">' + stageProgress + ' / ' + (stage ? stage.targetReps : '?') + ' this stage</p>' : '')
+      + (function() {
+          const fb = getFeedbackForObjective(id);
+          if (!fb) return '';
+          const d = fb.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) =>
+            new Date(y, m - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));
+          return '<div class="progress-feedback"><span class="feedback-label">Trainer feedback</span>'
+            + '<span class="feedback-text">' + fb.note.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>') + '</span>'
+            + '<span class="feedback-date">' + d + '</span></div>';
+        })()
       + '</article>';
   }).join('');
 
@@ -1097,6 +1145,7 @@ function markFed(time) {
   };
   saveState({ feeding });
   renderFeeding();
+  scheduleSyncPush();
 }
 
 // ── Calendar ──────────────────────────────────────────────────
@@ -1186,6 +1235,170 @@ function initDisplayMode() {
   showSlide();
 }
 
+// ── GitHub sync ───────────────────────────────────────────────
+
+const GH = {
+  rawBase: 'https://raw.githubusercontent.com/' + CONFIG.github.owner + '/' + CONFIG.github.repo + '/main/',
+  apiBase: 'https://api.github.com/repos/' + CONFIG.github.owner + '/' + CONFIG.github.repo + '/contents/',
+  token: function() { return localStorage.getItem('nova-github-token') || (typeof window.GITHUB_TOKEN !== 'undefined' ? window.GITHUB_TOKEN : null); },
+
+  async readRaw(path) {
+    const r = await fetch(this.rawBase + path + '?_=' + Date.now());
+    if (!r.ok) return null;
+    return r.text();
+  },
+
+  async readAPI(path) {
+    const h = {};
+    const tok = this.token();
+    if (tok) h.Authorization = 'token ' + tok;
+    const r = await fetch(this.apiBase + path, { headers: h, cache: 'no-store' });
+    if (!r.ok) return null;
+    return r.json();
+  },
+
+  async writeFile(path, content, sha, message) {
+    const tok = this.token();
+    if (!tok) throw new Error('no-token');
+    const body = { message, content: btoa(unescape(encodeURIComponent(content))) };
+    if (sha) body.sha = sha;
+    const r = await fetch(this.apiBase + path, {
+      method: 'PUT',
+      headers: { Authorization: 'token ' + tok, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.message || r.status); }
+    return r.json();
+  }
+};
+
+let stateSha = null;
+let syncInFlight = false;
+let syncTimer = null;
+
+function setSyncStatus(status) {
+  const pill = document.getElementById('syncPill');
+  const label = document.getElementById('syncPillText');
+  if (!pill || !label) return;
+  pill.className = 'sync-pill' + (status ? ' ' + status : '');
+  const msgs = { syncing: 'syncing…', synced: 'synced', error: 'sync error' };
+  label.textContent = msgs[status] || '';
+}
+
+function mergeRemoteState(remote) {
+  const local = getState();
+  const reps = Object.assign({}, remote.reps || {});
+  Object.entries(local.reps || {}).forEach(([k, v]) => { reps[k] = Math.max(reps[k] || 0, v); });
+
+  const tasks = Object.assign({}, remote.tasks || {});
+  Object.entries(local.tasks || {}).forEach(([day, t]) => {
+    tasks[day] = Object.assign({}, tasks[day] || {}, t);
+  });
+
+  const feeding = Object.assign({}, remote.feeding || {});
+  Object.entries(local.feeding || {}).forEach(([day, slots]) => {
+    feeding[day] = Object.assign({}, feeding[day] || {}, slots);
+  });
+
+  const merged = Object.assign({}, remote, { reps, tasks, feeding, user: local.user || remote.user });
+  localStorage.setItem(STATE_KEY, JSON.stringify(merged));
+}
+
+async function syncFromRemote() {
+  if (syncInFlight) return;
+  syncInFlight = true;
+  setSyncStatus('syncing');
+  try {
+    const text = await GH.readRaw('state.json');
+    if (!text) { setSyncStatus(''); syncInFlight = false; return; }
+    const remote = JSON.parse(text);
+    mergeRemoteState(remote);
+    if (GH.token() && !stateSha) {
+      const meta = await GH.readAPI('state.json');
+      if (meta) stateSha = meta.sha;
+    }
+    setSyncStatus('synced');
+    renderToday(); renderProgress(); renderFeeding();
+  } catch(e) {
+    setSyncStatus(e.message === 'no-token' ? '' : 'error');
+  } finally {
+    syncInFlight = false;
+  }
+}
+
+async function pushToRemote() {
+  if (!GH.token()) return;
+  if (syncInFlight) { scheduleSyncPush(); return; }
+  syncInFlight = true;
+  setSyncStatus('syncing');
+  try {
+    if (!stateSha) {
+      const meta = await GH.readAPI('state.json');
+      stateSha = meta ? meta.sha : null;
+    }
+    const state = getState();
+    const content = JSON.stringify(state, null, 2);
+    const msg = '\uD83D\uDC3E sync: ' + (state.user || 'family') + ' \u00B7 ' + new Date().toISOString().slice(0, 10);
+    const res = await GH.writeFile('state.json', content, stateSha, msg);
+    stateSha = res.content.sha;
+    saveState({ lastSync: new Date().toISOString() });
+    setSyncStatus('synced');
+  } catch(e) {
+    setSyncStatus(e.message === 'no-token' ? '' : 'error');
+  } finally {
+    syncInFlight = false;
+  }
+}
+
+function scheduleSyncPush() {
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushToRemote, 3000);
+}
+
+// ── Feedback reader ───────────────────────────────────────────
+
+let feedbackCache = null;
+
+async function loadFeedback() {
+  try {
+    const files = await GH.readAPI('feedback');
+    if (!Array.isArray(files)) return;
+    const mdFiles = files
+      .filter(f => f.name.endsWith('.md'))
+      .sort((a, b) => b.name.localeCompare(a.name))
+      .slice(0, 6);
+    const entries = [];
+    for (const f of mdFiles) {
+      const text = await GH.readRaw('feedback/' + f.name);
+      if (!text) continue;
+      const date = f.name.replace('.md', '');
+      parseFeedbackFile(text, date, entries);
+    }
+    feedbackCache = entries;
+    renderProgress();
+  } catch(e) { /* feedback is optional */ }
+}
+
+function parseFeedbackFile(text, date, entries) {
+  const sections = text.split(/\n## /);
+  for (let i = 1; i < sections.length; i++) {
+    const [header, ...bodyLines] = sections[i].split('\n');
+    const key = header.trim().toLowerCase().replace(/\s+/g, '-');
+    const note = bodyLines.join('\n').trim();
+    if (!note) continue;
+    const matchedId = CONFIG.goals.find(id => {
+      const obj = OBJECTIVES[id];
+      return id === key || (obj && obj.label.toLowerCase().replace(/\s+/g, '-') === key);
+    });
+    if (matchedId) entries.push({ id: matchedId, date, note });
+  }
+}
+
+function getFeedbackForObjective(id) {
+  if (!feedbackCache) return null;
+  return feedbackCache.find(e => e.id === id) || null;
+}
+
 // ── Init ──────────────────────────────────────────────────────
 function init() {
   renderHeader();
@@ -1197,11 +1410,17 @@ function init() {
   if (!user) showPicker();
 }
 
+function initAsync() {
+  syncFromRemote();
+  loadFeedback();
+}
+
 renderPicker();
 init();
 initNavObserver();
 initDisplayMode();
 setInterval(renderFeeding, 60 * 1000);
+initAsync();
 </script>
 </body>
 </html>
