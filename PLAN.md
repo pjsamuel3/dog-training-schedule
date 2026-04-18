@@ -55,7 +55,13 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
   - Completion reward: confetti + discount code from `CONFIG.completionReward`
   - `state.celebrated` tracks first-completion across devices
 
-## Phase 8 — Ongoing
+## Phase 8 — Ongoing ✅
 - [x] Family observation notes — per-objective notes from family members, synced via state.json (PR #12)
 - [x] Journey expandable schedule — tap any week to see planned task instructions; past weeks muted, current auto-expanded, future previewed (PR #13)
 - [x] Update `.github/copilot-instructions.md` with Overview, family notes, and Journey patterns
+
+## Phase 9 — Three view modes
+- [ ] Simple view — default for all users: one task card, "Done it!" button, week label, "See everything →" link
+- [ ] Advanced view — full tabbed app (existing build), activated by "See everything →", preference in localStorage
+- [ ] "Simple view ←" return link in Advanced header
+- [ ] Trainer view — ⚙ Settings toggle, builds on Advanced: read-only, rep summary, templates, feedback form (PR #14 to be revised)
