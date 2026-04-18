@@ -6,7 +6,45 @@ Families on their phones in the kitchen or garden, and on a tablet mounted or pr
 ## The one job of this page
 Give every family member one clear thing to do with Nova today — and make it easy to log that they did it.
 
-## Sections
+---
+
+## View modes
+
+The app has three modes. **Simple is the default** — everyone lands here. Modes are not roles; any family member can switch to Advanced whenever they want.
+
+| Mode | Who | How to activate | What it shows |
+|------|-----|-----------------|---------------|
+| **Simple** | Everyone — default | — | Today's #1 task, one "Done it!" button, week label |
+| **Advanced** | Engaged family members | Toggle on the Simple view | Full tabbed app: Today, Overview, Feeding, Journey |
+| **Trainer** | Trainer only | Toggle in ⚙ Settings | Read-only Advanced + rep summary + WhatsApp templates + feedback form |
+
+### Simple view (default)
+
+The first thing anyone sees when they open the app. Deliberately minimal — no tabs, no nav bar, no counters.
+
+**Layout (top to bottom):**
+- Dog name + week label (`Week 6 — Consolidation`)
+- This week's goal (one line)
+- The **first daily task** for the current week — large card:
+  - Objective name (display font, large)
+  - Task instruction (readable body text)
+  - A single prominent **"Done it! ✓"** button — marks the task done for today
+- A small quiet link: **"See everything →"** — switches to Advanced view
+
+**What it does NOT show:**
+- Rep counters, progress bars, feeding log, journey timeline
+- Multiple tasks — just one, the primary task for this week
+- The bottom nav tab bar
+
+**Done state:** When the task is marked done, the card shows a warm confirmation ("Nova would be proud 🐾") and the button becomes inactive for the rest of the day.
+
+**Persistence:** Simple/Advanced preference stored in `localStorage('nova-view-mode')` — values `'simple'` (default) or `'advanced'`.
+
+### Advanced view
+
+The full tabbed app as currently built. Activated by tapping "See everything →" on the Simple view. A quiet **"Simple view ←"** link in the header returns to Simple.
+
+Sections unchanged:
 
 | Anchor | Label | Purpose |
 |--------|-------|---------|
@@ -14,6 +52,17 @@ Give every family member one clear thing to do with Nova today — and make it e
 | `#overview` | Overview | Gamified training dashboard — programme progress, objective cards, rewards |
 | `#feeding` | Feeding | Food log — times, amounts, check-off by name |
 | `#calendar` | Journey | Milestone timeline, full programme overview |
+
+### Trainer view
+
+Activated from ⚙ Settings → "Trainer view" toggle. Builds on Advanced view with read-only UI and trainer-specific tools. Stored in `localStorage('nova-trainer-mode')`.
+
+Changes from Advanced:
+- Rep +/− buttons, done toggles, feed buttons, family note forms hidden
+- Feeding tab hidden
+- Overview loads first
+- "This week's progress" rep summary card at top of Overview
+- Templates card at bottom of Overview (WhatsApp plan + feedback request + in-app feedback form)
 
 `#overview` replaces the former `#progress` tab. Rep-logging (+/−) is now inline within each objective card in Overview — Progress is no longer a separate nav destination.
 
@@ -218,7 +267,7 @@ All task instructions come from `SCHEDULE[weekN].dailyTasks` — no new data nee
 ## Trainer Mode
 
 ### Purpose
-A simplified, high-contrast, large-type view of the app designed for a less technical trainer to review progress at a glance or demo the app to prospective clients. The trainer should never feel lost or overwhelmed — one thing per screen, big text, obvious layout.
+An overlay on top of Advanced view, designed for a less technical trainer to review progress at a glance or demo the app to prospective clients. The trainer should never feel lost or overwhelmed — data visible, actions hidden, templates ready to copy.
 
 ### Toggle
 - A **Trainer mode** toggle in the settings drawer (same drawer as the GitHub PAT UI)

@@ -60,10 +60,8 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
 - [x] Journey expandable schedule — tap any week to see planned task instructions; past weeks muted, current auto-expanded, future previewed (PR #13)
 - [x] Update `.github/copilot-instructions.md` with Overview, family notes, and Journey patterns
 
-## Phase 9 — Trainer Mode + Templates
-- [ ] Trainer mode toggle — settings drawer toggle, stored in localStorage, `view-trainer` body class
-- [ ] Trainer mode UI — large type, read-only (no rep buttons, no note forms), Overview first, Feeding hidden
-- [ ] Trainer mode overview — "This week's rep totals" summary row added above objective cards
-- [ ] Template 1 — "This week's plan" copy block (Trainer → Family, top 3 tasks, WhatsApp format)
-- [ ] Template 2 — "Feedback request" copy block (Trainer → Family, 3 questions, WhatsApp format)
-- [ ] Template 3 — In-app feedback form: trainer logs family answers, commits feedback/YYYY-MM-DD.md via GitHub API
+## Phase 9 — Three view modes
+- [ ] Simple view — default for all users: one task card, "Done it!" button, week label, "See everything →" link
+- [ ] Advanced view — full tabbed app (existing build), activated by "See everything →", preference in localStorage
+- [ ] "Simple view ←" return link in Advanced header
+- [ ] Trainer view — ⚙ Settings toggle, builds on Advanced: read-only, rep summary, templates, feedback form (PR #14 to be revised)
