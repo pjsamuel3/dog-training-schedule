@@ -44,13 +44,17 @@ state.json           ← cross-device sync target (written via GitHub API)
 
 ```js
 {
-  user:  "Pete",           // current family member name
-  reps:  { "less-barking": 14, "sit-and-wait": 7 },  // cumulative rep counts
-  done:  { "2026-04-18": ["less-barking"] },           // tasks completed today
-  fed:   { "2026-04-18": { "08:00": { user: "Marianne", time: "08:32" } } },
+  user:     "Pete",
+  reps:     { "less-barking": 14 },          // cumulative, no timestamps (KISS)
+  tasks:    { "2026-04-18": { "less-barking": true } },  // done flags keyed by date
+  feeding:  { "2026-04-18": { "08:00": { fed: true, by: "Pete", at: "08:32" } } },
+  celebrated: { "fetch-ball": true },        // confetti fired once per objective
+  observations: { "less-barking": { text: "Good session", date: "2026-04-18", by: "Marianne" } },
   lastSync: "2026-04-18T08:32:00.000Z"
 }
 ```
+
+Merge strategy (cross-device via GitHub API): reps = max, tasks/feeding = union, celebrated = OR, observations = newest date wins per objective.
 
 ---
 
@@ -112,9 +116,11 @@ Kinfolk magazine meets Scandi dog brand. Calm, warm, minimal. Outdoors and fores
 | ID | Nav label | Purpose |
 |----|-----------|---------|
 | `#today` | Today 🐾 | This week's goal, today's tasks, rep counting |
-| `#progress` | Progress 📊 | Rep counters per objective, stage dots, progress bars |
+| `#overview` | Overview ◎ | Gamified training dashboard — progress, objective cards, rewards |
 | `#feeding` | Feeding 🥣 | Twice-daily food log, check-off per family member |
-| `#calendar` | Journey 🗓 | Full programme timeline from `programStartDate` |
+| `#calendar` | Journey 🗓 | Full programme timeline, expandable weekly task cards |
+
+`#progress` has been replaced by `#overview`. Rep-logging (+/−) lives inside Overview objective cards only.
 
 Ambient/display mode: `?mode=display` — full-screen cycling slides, kitchen screen.
 
@@ -147,32 +153,78 @@ Ambient/display mode: `?mode=display` — full-screen cycling slides, kitchen sc
 - Add `.active` to `.btn-done` when complete
 - Young child view (`.view-young-child` on body): hide `.task-tip`, larger font, full-width buttons
 
-### Progress card (`.progress-card`)
+### Overview dashboard
 
+Replaces the old `#progress` tab. Built by `renderOverview()`.
+
+**Hero strip** — tier label + rep sub + animated bar:
 ```html
-<article class="progress-card fade-up" data-id="less-barking">
-  <div class="progress-header-row">
-    <h3 class="progress-title">Less barking</h3>
-    <span class="progress-stage-badge">Stage 1</span>
-    <!-- or when complete: -->
-    <span class="progress-badge-done">⭐ Complete</span>
+<div class="overview-hero">
+  <h2 class="overview-hero-tier" id="overviewTier">Building momentum</h2>
+  <p class="overview-hero-sub" id="overviewRepSub">147 of 450 reps — keep going!</p>
+  <div class="overview-hero-bar-track">
+    <div class="overview-hero-bar-fill" id="overviewHeroBar" style="width:33%"></div>
   </div>
-  <p class="progress-stage-name">Mark and reward quiet moments</p>
-  <div class="progress-bar-track">
-    <div class="progress-bar-fill" style="width:41%"></div>
-    <!-- add .graduated when 100% complete -->
+</div>
+```
+
+Tier labels (% of total reps): Just getting started · Building momentum · Good progress · Almost there! · One last push! · Programme complete!
+
+**Category mini-bars** — one row per category (Reactivity · Impulse Control · Tricks · Play):
+```html
+<div class="category-bar-row">
+  <div class="category-bar-header">
+    <span class="category-bar-label">Reactivity</span>
+    <span class="category-bar-pct">33%</span>
   </div>
-  <div class="progress-meta-row">
-    <span>14 / 60 reps</span>
-    <span>46 to go</span>
+  <div class="category-bar-track"><div class="category-bar-fill" style="width:33%"></div></div>
+</div>
+```
+
+**Objective cards** — one per active `CONFIG.goals` entry:
+```html
+<article class="overview-obj-card" data-id="less-barking">
+  <div class="overview-obj-header">
+    <h3 class="overview-obj-title">Less barking</h3>
+    <span class="obj-cat-chip">⚡ reactivity</span>
+    <span class="obj-status-badge in-progress">In progress</span>
   </div>
-  <div class="stage-dots">
-    <span class="stage-dot done"></span>
-    <span class="stage-dot active"></span>
-    <span class="stage-dot"></span>
+  <p class="overview-obj-stage">Stage 1 of 3 — Mark and reward quiet moments</p>
+  <button class="stage-breakdown-btn" aria-expanded="false" onclick="toggleStageBreakdown(this)">
+    ▶ Stages
+  </button>
+  <div class="stage-breakdown-panel"><!-- stage list --></div>
+  <div class="overview-rep-bar-track">
+    <div class="overview-rep-bar-fill" style="width:23%"></div>
+  </div>
+  <p class="overview-rep-meta">14 / 60 reps · 23%</p>
+  <div class="overview-rep-counter">
+    <button onclick="decrementRep('less-barking')">−</button>
+    <span>14</span>
+    <button onclick="logRep('less-barking')">+</button>
+  </div>
+  <!-- trainer note snippet (blush tint) when feedbackCache has a match -->
+  <div class="overview-trainer-note">...</div>
+  <!-- family note block + inline form -->
+  <div class="overview-family-note">...</div>
+  <!-- completion reward block — shown when reps >= targetReps -->
+  <div class="overview-reward-block">
+    Show this code to your trainer: <strong>NOVA5OFF</strong>
   </div>
 </article>
 ```
+
+Status badge values: `just-started` · `in-progress` · `almost-there` · `last-push` · `complete`
+
+**Family observation notes** — per-objective, inline form in each objective card:
+- Stored in `state.observations[id] = { text, date, by }` — synced via state.json
+- Newest date wins on merge (cross-device)
+- `showNoteForm(id)` / `cancelNote(id)` / `saveNote(id)` manage the inline textarea
+
+**Completion reward + confetti:**
+- `state.celebrated[id]` tracks first-fire per objective (persisted to state.json)
+- `fireConfetti()` — 110 vanilla canvas particles, 3.5s, no library
+- Reward code from `CONFIG.completionReward.code`
 
 ### Feeding card (`.feeding-card`)
 
@@ -195,17 +247,34 @@ Ambient/display mode: `?mode=display` — full-screen cycling slides, kitchen sc
 </article>
 ```
 
-### Timeline week (`.timeline-week`)
+### Timeline week (`.timeline-week`) — expandable
 
 ```html
 <div class="timeline-week current" <!-- past | current | future -->>
   <div class="week-dot current"></div>  <!-- done | current -->
-  <span class="week-num">Week 6 <span class="week-current-badge">Now</span></span>
-  <h3 class="week-title">Confidence and real world</h3>
-  <p class="week-focus">Primary focus: less-reactivity-dogs</p>
-  <p class="week-trainer-note">"Push further from home…"</p>
+  <div class="week-content">
+    <span class="week-num">Week 6 <span class="week-current-badge">Now</span></span>
+    <h4 class="week-title">Confidence and real world</h4>
+    <p class="week-focus">Less reactivity · Fetch</p>
+    <!-- expand toggle (generated by renderCalendar) -->
+    <button class="week-expand-btn" aria-expanded="true" onclick="toggleWeekExpand(this)">
+      <span class="expand-chevron">▶</span> This week's tasks
+    </button>
+    <!-- expandable panel — open class added by toggleWeekExpand() -->
+    <div class="week-tasks open">
+      <span class="journey-state-label">Completed</span>  <!-- past weeks only -->
+      <p class="week-task-trainer-note">"Push further from home…"</p>
+      <article class="journey-task-card">
+        <!-- task-header-row, task-title, task-instruction, task-tip (same as task-card but no buttons) -->
+      </article>
+    </div>
+  </div>
 </div>
 ```
+
+- Current week: `aria-expanded="true"`, panel open on load
+- Past weeks: panel at 55% opacity (`.timeline-week.past .week-tasks { opacity: .55 }`)
+- `toggleWeekExpand(btn)` rotates the `▶` chevron and toggles `.open` on the sibling panel
 
 ### Trainer note (`.trainer-note`)
 
@@ -241,11 +310,22 @@ getCurrentWeek()         // → 1–6, computed from phaseStartDate
 getWeekData()            // → SCHEDULE['week' + n]
 getCurrentUser()         // → CONFIG.family entry for current user
 getUserRole()            // → 'parent' | 'child' | 'young-child' | 'guest'
-logRep(objectiveId)      // increments reps[id], triggers sync
-toggleDone(objectiveId)  // toggles done[today][id], re-renders card
-markFed(time)            // records fed[today][time] with user + timestamp
+logRep(objectiveId)      // increments reps[id], re-renders Today + Overview, triggers sync
+decrementRep(objectiveId)// decrements reps[id], re-renders, triggers sync
+toggleDone(objectiveId)  // toggles tasks[today][id], re-renders card
+markFed(time)            // records feeding[today][time] with user + timestamp
 showPicker()             // shows picker overlay
 selectUser(name)         // saves user to state, hides picker, re-renders
+renderOverview()         // builds Overview dashboard (hero, category bars, obj cards)
+renderCalendar()         // builds Journey timeline with expandable week panels
+toggleWeekExpand(btn)    // expand/collapse a week's task panel in Journey
+toggleStageBreakdown(btn)// expand/collapse stage list on an Overview objective card
+fireConfetti()           // 110-particle canvas burst, no library
+showNoteForm(id)         // show inline observation note textarea on objective card
+saveNote(id)             // persist note to state.observations + sync
+cancelNote(id)           // hide note form without saving
+copyRewardCode(btn)      // clipboard copy of CONFIG.completionReward.code
+scheduleSyncPush()       // debounced 3s GitHub API PUT of state.json
 ```
 
 ---
@@ -261,7 +341,8 @@ const CONFIG = {
   session: { day, time, programStartDate, phaseStartDate, sessionsComplete },
   feeding: [{ time, amount, label }],
   goals:   ["objective-id", ...],    // active objectives in display order
-  github:  { owner, repo }           // public — token NEVER goes here
+  github:  { owner, repo },          // public — token NEVER goes here
+  completionReward: { code: "NOVA5OFF", message: "5% off your next training package" }
 };
 ```
 

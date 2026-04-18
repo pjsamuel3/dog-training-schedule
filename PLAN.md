@@ -57,5 +57,5 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
 
 ## Phase 8 — Ongoing
 - [x] Family observation notes — per-objective notes from family members, synced via state.json (PR #12)
-- [ ] Journey expandable schedule — tap any week to see planned task instructions; past weeks muted, current auto-expanded, future previewed (specced, not yet built)
-- [ ] Update `.github/copilot-instructions.md` with Overview and family notes patterns
+- [x] Journey expandable schedule — tap any week to see planned task instructions; past weeks muted, current auto-expanded, future previewed (PR #13)
+- [x] Update `.github/copilot-instructions.md` with Overview, family notes, and Journey patterns
