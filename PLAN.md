@@ -10,22 +10,22 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
 - [x] `objectives.js` — objective library with stages and rep targets
 - [x] `plan/schedule.js` — weekly trainer schedule in source control
 
-## Phase 1 — GitHub setup
-- [ ] Enable GitHub Pages (main branch, / root)
-- [ ] Confirm live URL works
+## Phase 1 — GitHub setup ✅
+- [x] Enable GitHub Pages (main branch, / root)
+- [x] Live URL: https://pjsamuel3.github.io/dog-training-schedule/
 
-## Phase 2 — Design system
-- [ ] Agree aesthetic direction — palette, fonts, mood
-- [ ] Write `SPEC.md` (audience, sections, aesthetic)
-- [ ] Lock CSS tokens in `:root` before any component code
+## Phase 2 — Design system ✅
+- [x] Agreed aesthetic — Kinfolk/Scandi, warm linen, sage green, dusty rose, pastels
+- [x] `SPEC.md` written — audience, sections, palette, fonts, type scale
+- [x] CSS tokens locked in `:root`
 
-## Phase 3 — Build `index.html`
-- [ ] This week's goal + today's practice tasks (primary view)
-- [ ] Food log — feeding times, check-off per family member (localStorage)
-- [ ] Progress widgets — rep counter per objective, stage indicator
-- [ ] Milestone calendar — full programme timeline
-- [ ] Role-based family views — parent vs child (age-aware content)
-- [ ] Ambient / kitchen screen mode (`?mode=display`)
+## Phase 3 — Build `index.html` ✅
+- [x] This week's goal + today's practice tasks (primary view)
+- [x] Food log — feeding times, check-off per family member (localStorage)
+- [x] Progress widgets — rep counter per objective, stage indicator
+- [x] Milestone calendar — full programme timeline
+- [x] Role-based family views — parent / child / young child (age-aware)
+- [x] Ambient / kitchen screen mode (`?mode=display`)
 
 ## Phase 4 — Copilot instructions
 - [ ] Write `.github/copilot-instructions.md` with design system and component patterns
