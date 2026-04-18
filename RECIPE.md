@@ -185,6 +185,126 @@ Edit the template to match your project's specific concerns.
 
 ---
 
+## Phase 6 — UI/UX testing with Playwright + BDD
+
+Add automated tests that verify the app behaves against the spec. Tests run locally and in CI (GitHub Actions).
+
+### Install
+
+```bash
+npm init -y
+npm install -D @playwright/test
+npx playwright install chromium
+```
+
+### Configure (`playwright.config.js`)
+
+```js
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  use: { baseURL: 'http://localhost:3000' },
+  webServer: {
+    command: 'npx serve . -p 3000 -s',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  },
+});
+```
+
+### Test structure — BDD style
+
+Organise tests as `describe` → scenario, mapping directly to SPEC.md sections.
+Use `test.beforeEach` to set up localStorage state (user selection, reps, feeding log).
+
+```js
+import { test, expect } from '@playwright/test';
+
+const asUser = (name) => async ({ page }) => {
+  await page.addInitScript(n =>
+    localStorage.setItem('nova-state', JSON.stringify({ user: n })), name);
+  await page.goto('/');
+};
+
+test.describe('Today view', () => {
+  test.beforeEach(asUser('Pete'));
+
+  test('parent sees trainer note', async ({ page }) => {
+    await expect(page.locator('.trainer-note')).toBeVisible();
+  });
+
+  test('rep button increments counter', async ({ page }) => {
+    const btn = page.locator('.btn-rep').first();
+    const before = await page.locator('.rep-count').first().textContent();
+    await btn.click();
+    const after = await page.locator('.rep-count').first().textContent();
+    expect(Number(after)).toBe(Number(before) + 1);
+  });
+});
+
+test.describe('Young child view (Oliver, age 9)', () => {
+  test.beforeEach(asUser('Oliver'));
+
+  test('shows exactly one task', async ({ page }) => {
+    const cards = page.locator('.task-card');
+    await expect(cards).toHaveCount(1);
+  });
+});
+```
+
+### What to test (map to SPEC.md)
+
+| Scenario | Section |
+|----------|---------|
+| User picker appears on first load | Today |
+| Parent sees trainer note | Today |
+| Child <10 sees one task at a time | Today |
+| Rep counter increments on tap | Today |
+| Done toggle changes card style | Today |
+| All goals appear in progress list | Progress |
+| Progress bar width matches rep count | Progress |
+| Feeding cards show due-now state | Feeding |
+| Mark as fed records name and time | Feeding |
+| Current week highlighted in Journey | Journey |
+| `?mode=display` hides main UI | Ambient |
+
+### Run
+
+```bash
+npx playwright test              # headless
+npx playwright test --headed     # with browser
+npx playwright show-report       # view HTML report
+```
+
+### Continuous integration
+
+Add `.github/workflows/test.yml`:
+
+```yaml
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+```
+
+**Rule:** every PR that touches `index.html` or data files must pass the test suite before merge.
+
+---
+
 ## What to fork and change per project
 
 | File | What to update |

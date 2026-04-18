@@ -1,5 +1,11 @@
-# Real config — contains GitHub token, never commit
-config.js
-
 # macOS
 .DS_Store
+
+# Node / Playwright
+node_modules/
+test-results/
+playwright-report/
+.playwright/
+
+# Private overrides (token, local secrets — never commit)
+config.private.js

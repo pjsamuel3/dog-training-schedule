@@ -751,6 +751,18 @@
 <script>
 'use strict';
 
+// Guard: show a helpful message if any data file failed to load
+if (typeof CONFIG === 'undefined' || typeof OBJECTIVES === 'undefined' || typeof SCHEDULE === 'undefined') {
+  document.body.innerHTML = '<div style="font-family:system-ui;padding:3rem 2rem;max-width:500px;margin:0 auto">'
+    + '<h2 style="font-size:1.5rem;margin-bottom:.75rem">Missing config</h2>'
+    + '<p style="color:#666;line-height:1.6">One or more data files failed to load: '
+    + '<code>config.js</code>, <code>objectives.js</code>, or <code>plan/schedule.js</code>.</p>'
+    + '<p style="color:#666;line-height:1.6;margin-top:.75rem">Make sure all three files are in the same folder as <code>index.html</code> '
+    + 'and you are serving the files over HTTP (not opening the HTML file directly).</p>'
+    + '</div>';
+  throw new Error('Missing required data files — see message in page');
+}
+
 // ── State ─────────────────────────────────────────────────────
 const STATE_KEY = 'nova-state';
 
