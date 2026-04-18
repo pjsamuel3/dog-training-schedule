@@ -598,6 +598,159 @@
   @keyframes sync-pulse { 0%,100% { opacity: 1; } 50% { opacity: .2; } }
   .sync-pill.syncing .sync-dot { animation: sync-pulse .9s ease-in-out infinite; }
 
+  /* ── Settings button ─────────────────────────────────────────── */
+  .btn-settings {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 1rem;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+  }
+  .btn-settings:hover { background: var(--accent-bg); color: var(--accent); }
+  .btn-settings.has-token { color: var(--accent); }
+
+  /* mobile header settings button */
+  .header-settings-btn {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-size: .9rem;
+    flex-shrink: 0; margin-top: .25rem;
+    transition: background .15s;
+  }
+  .header-settings-btn:hover { background: rgba(255,255,255,.28); }
+
+  /* ── Settings overlay ────────────────────────────────────────── */
+  .settings-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(43,45,40,.55);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  .settings-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .settings-card {
+    background: var(--card-bg);
+    border-radius: var(--r-md);
+    padding: 2rem 1.5rem;
+    width: 100%; max-width: 420px;
+    box-shadow: var(--shadow-md);
+  }
+  .settings-title {
+    font-family: var(--f-display);
+    font-size: var(--text-2xl); color: var(--ink);
+    margin-bottom: .25rem;
+  }
+  .settings-sub {
+    font-size: var(--text-sm); color: var(--muted);
+    margin-bottom: 1.5rem; line-height: 1.55;
+  }
+
+  .settings-status {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .75rem 1rem;
+    border-radius: var(--r-sm);
+    font-size: var(--text-sm); font-weight: 500;
+    margin-bottom: 1.25rem;
+  }
+  .settings-status.connected {
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid rgba(123,158,135,.3);
+  }
+  .settings-status.disconnected {
+    background: var(--bg);
+    color: var(--muted);
+    border: 1px solid var(--card-border);
+  }
+  .settings-status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+
+  .settings-label {
+    display: block;
+    font-size: var(--text-sm); font-weight: 600;
+    color: var(--ink); margin-bottom: .4rem;
+  }
+  .settings-hint {
+    font-size: var(--text-xs); color: var(--muted);
+    margin-bottom: .6rem; line-height: 1.5;
+  }
+  .settings-hint a { color: var(--accent); text-underline-offset: 2px; }
+
+  .token-input-wrap {
+    display: flex; gap: .5rem; margin-bottom: 1rem;
+  }
+  .token-input {
+    flex: 1;
+    font-family: var(--f-body); font-size: var(--text-sm);
+    background: var(--bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--r-sm);
+    padding: .55rem .75rem;
+    color: var(--ink); outline: none;
+    transition: border-color .15s;
+    min-width: 0;
+  }
+  .token-input:focus { border-color: var(--accent); }
+  .token-input.error  { border-color: var(--blush); }
+
+  .btn-toggle-token {
+    padding: .55rem .75rem;
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--r-sm);
+    background: var(--bg); color: var(--muted);
+    font-size: var(--text-sm);
+    transition: border-color .15s, color .15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-toggle-token:hover { border-color: var(--accent); color: var(--accent); }
+
+  .settings-error {
+    font-size: var(--text-xs); color: var(--blush);
+    margin-bottom: .75rem; display: none;
+  }
+  .settings-error.visible { display: block; }
+
+  .settings-actions {
+    display: flex; gap: .5rem; flex-wrap: wrap;
+  }
+  .btn-connect {
+    flex: 1;
+    background: var(--accent); color: var(--white);
+    border-radius: var(--r-pill);
+    padding: .6rem 1.25rem;
+    font-size: var(--text-base); font-weight: 600;
+    min-height: 44px;
+    transition: background .15s;
+  }
+  .btn-connect:hover { background: var(--accent-dark); }
+  .btn-disconnect {
+    background: var(--bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--r-pill);
+    padding: .6rem 1.25rem;
+    font-size: var(--text-sm); font-weight: 500;
+    color: var(--muted); min-height: 44px;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-disconnect:hover { border-color: var(--blush); color: var(--blush); }
+  .btn-settings-close {
+    padding: .6rem 1.25rem;
+    border-radius: var(--r-pill);
+    font-size: var(--text-sm); font-weight: 500;
+    border: 1.5px solid var(--card-border);
+    color: var(--muted); min-height: 44px;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-settings-close:hover { border-color: var(--accent); color: var(--accent); }
+
   /* ── Trainer feedback (in progress cards) ────────────────────── */
   .progress-feedback {
     margin-top: .65rem;
@@ -672,6 +825,43 @@
   </div>
 </div>
 
+<!-- ── Sync settings overlay ────────────────────────────────── -->
+<div id="settingsOverlay" class="settings-overlay" role="dialog" aria-modal="true" aria-label="Sync settings">
+  <div class="settings-card">
+    <h2 class="settings-title">Sync settings</h2>
+    <p class="settings-sub">Connect a GitHub token so rep counts stay in sync across all family phones and tablets.</p>
+
+    <div id="settingsStatus" class="settings-status disconnected">
+      <span class="settings-status-dot"></span>
+      <span id="settingsStatusText">Not connected</span>
+    </div>
+
+    <div id="settingsForm">
+      <label class="settings-label" for="tokenInput">Paste your token</label>
+      <p class="settings-hint">
+        You'll need a GitHub fine-grained token with <strong>Contents: Read and write</strong> access to this repo.<br>
+        Ask Pete if you don't have one yet.
+      </p>
+      <div class="token-input-wrap">
+        <input class="token-input" id="tokenInput" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+        <button class="btn-toggle-token" id="toggleTokenBtn" onclick="toggleTokenVisibility()" type="button">Show</button>
+      </div>
+      <p class="settings-error" id="settingsError"></p>
+      <div class="settings-actions">
+        <button class="btn-connect" onclick="saveToken()">Connect</button>
+        <button class="btn-settings-close" onclick="hideSettings()">Cancel</button>
+      </div>
+    </div>
+
+    <div id="settingsConnectedActions" style="display:none">
+      <div class="settings-actions">
+        <button class="btn-disconnect" onclick="disconnectSync()">Disconnect</button>
+        <button class="btn-settings-close" onclick="hideSettings()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── Desktop top nav ──────────────────────────────────────── -->
 <nav class="top-nav" aria-label="Site navigation">
   <a href="#today" class="top-nav-brand" id="navBrand">Nova</a>
@@ -682,6 +872,7 @@
     <li><a href="#calendar">Journey</a></li>
   </ul>
   <span id="syncPill" class="sync-pill"><span class="sync-dot"></span><span id="syncPillText"></span></span>
+  <button class="btn-settings" id="navSettingsBtn" onclick="showSettings()" aria-label="Sync settings" title="Sync settings">⚙</button>
   <button class="user-chip" onclick="showPicker()" aria-label="Switch family member">
     <span class="user-chip-avatar" id="navAvatarInitial">?</span>
     <span id="navChipName">Who are you?</span>
@@ -695,6 +886,7 @@
       <h1 class="dog-name" id="headerDogName">Nova</h1>
       <p class="dog-meta" id="headerDogMeta"></p>
     </div>
+    <button class="header-settings-btn" onclick="showSettings()" aria-label="Sync settings" title="Sync settings">⚙</button>
     <button class="header-user-chip" onclick="showPicker()" aria-label="Switch family member">
       <span class="header-user-avatar" id="headerAvatarInitial">?</span>
       <span id="headerChipName">Who are you?</span>
@@ -1235,6 +1427,83 @@ function initDisplayMode() {
   showSlide();
 }
 
+// ── Settings overlay ──────────────────────────────────────────
+
+function showSettings() {
+  const overlay = document.getElementById('settingsOverlay');
+  overlay.classList.add('visible');
+  updateSettingsUI();
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('settingsError').className = 'settings-error';
+}
+
+function hideSettings() {
+  document.getElementById('settingsOverlay').classList.remove('visible');
+}
+
+function updateSettingsUI() {
+  const hasToken = !!GH.token();
+  const status   = document.getElementById('settingsStatus');
+  const statusTxt = document.getElementById('settingsStatusText');
+  const form     = document.getElementById('settingsForm');
+  const actions  = document.getElementById('settingsConnectedActions');
+  const navBtn   = document.getElementById('navSettingsBtn');
+
+  status.className = 'settings-status ' + (hasToken ? 'connected' : 'disconnected');
+  statusTxt.textContent = hasToken ? 'Connected — sync is active' : 'Not connected';
+  form.style.display    = hasToken ? 'none' : '';
+  actions.style.display = hasToken ? '' : 'none';
+  if (navBtn) navBtn.classList.toggle('has-token', hasToken);
+}
+
+function toggleTokenVisibility() {
+  const input = document.getElementById('tokenInput');
+  const btn   = document.getElementById('toggleTokenBtn');
+  const show  = input.type === 'password';
+  input.type  = show ? 'text' : 'password';
+  btn.textContent = show ? 'Hide' : 'Show';
+}
+
+function saveToken() {
+  const input = document.getElementById('tokenInput');
+  const errEl = document.getElementById('settingsError');
+  const val   = input.value.trim();
+
+  if (!val) {
+    errEl.textContent = 'Please paste your token first.';
+    errEl.className = 'settings-error visible';
+    input.classList.add('error');
+    return;
+  }
+  if (!val.startsWith('github_pat_') && !val.startsWith('ghp_')) {
+    errEl.textContent = 'That doesn\'t look like a GitHub token. It should start with github_pat_ or ghp_.';
+    errEl.className = 'settings-error visible';
+    input.classList.add('error');
+    return;
+  }
+
+  localStorage.setItem('nova-github-token', val);
+  input.classList.remove('error');
+  errEl.className = 'settings-error';
+  updateSettingsUI();
+  hideSettings();
+  syncFromRemote();
+}
+
+function disconnectSync() {
+  localStorage.removeItem('nova-github-token');
+  stateSha = null;
+  setSyncStatus('');
+  updateSettingsUI();
+  hideSettings();
+}
+
+// Close settings on backdrop click
+document.addEventListener('click', function(e) {
+  const overlay = document.getElementById('settingsOverlay');
+  if (e.target === overlay) hideSettings();
+});
+
 // ── GitHub sync ───────────────────────────────────────────────
 
 const GH = {
@@ -1408,6 +1677,7 @@ function init() {
   renderCalendar();
   const user = getCurrentUser();
   if (!user) showPicker();
+  updateSettingsUI();
 }
 
 function initAsync() {
