@@ -566,6 +566,44 @@
     padding-left: .6rem;
   }
 
+  .week-expand-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: var(--text-xs); color: var(--accent);
+    font-family: var(--f-body); font-weight: 600;
+    display: inline-flex; align-items: center; gap: .3rem;
+    padding: .35rem 0; margin-top: .4rem;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .week-expand-btn .expand-chevron {
+    display: inline-block;
+    transition: transform .25s;
+    line-height: 1;
+  }
+  .week-expand-btn[aria-expanded="true"] .expand-chevron { transform: rotate(90deg); }
+
+  .week-tasks { display: none; margin-top: .75rem; }
+  .week-tasks.open { display: block; }
+
+  .journey-state-label {
+    font-size: var(--text-xs); color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+    display: block; margin-bottom: .5rem;
+  }
+  .week-task-trainer-note {
+    font-size: var(--text-sm); color: var(--muted);
+    font-style: italic;
+    border-left: 2px solid var(--blush); padding-left: .6rem;
+    margin-bottom: .75rem;
+  }
+  .journey-task-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-sm);
+    padding: 1rem 1.1rem;
+    margin-bottom: .6rem;
+  }
+  .timeline-week.past .week-tasks { opacity: .55; }
+
   /* ── Scroll fade-up ──────────────────────────────────────────── */
   .fade-up     { opacity: 0; transform: translateY(18px); transition: opacity .45s ease, transform .45s ease; }
   .fade-up.in  { opacity: 1; transform: none; }
@@ -1800,6 +1838,41 @@ function markFed(time) {
 }
 
 // ── Calendar ──────────────────────────────────────────────────
+function buildJourneyTaskPanel(week, weekState) {
+  const catEmojis = { reactivity: '⚡', 'impulse-control': '🧠', tricks: '🎯', play: '🎾' };
+  const stateLabel = weekState === 'past'
+    ? '<span class="journey-state-label">Completed</span>'
+    : weekState === 'future'
+    ? '<span class="journey-state-label">Coming up</span>'
+    : '';
+  const trainerNoteHTML = week.trainerNote
+    ? '<p class="week-task-trainer-note">' + week.trainerNote + '</p>'
+    : '';
+  const taskCards = (week.dailyTasks || []).map(task => {
+    const obj = OBJECTIVES[task.objective] || {};
+    const stage = obj.stages ? obj.stages[task.stage] : null;
+    const stageLabel = stage ? ' · Stage ' + (task.stage + 1) : '';
+    const cat = obj.category || '';
+    const catEmoji = catEmojis[cat] || '🐾';
+    return '<article class="journey-task-card">'
+      + '<div class="task-header-row">'
+        + '<span class="task-category">' + catEmoji + ' ' + (cat || task.objective) + '</span>'
+        + '<span class="task-reps-target">' + task.reps + ' reps' + stageLabel + '</span>'
+      + '</div>'
+      + '<h4 class="task-title">' + (obj.label || task.objective) + '</h4>'
+      + '<p class="task-instruction">' + task.instruction + '</p>'
+      + (task.tip ? '<div class="task-tip"><strong>Tip:</strong> ' + task.tip + '</div>' : '')
+      + '</article>';
+  }).join('');
+  return stateLabel + trainerNoteHTML + taskCards;
+}
+
+function toggleWeekExpand(btn) {
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!expanded));
+  btn.nextElementSibling.classList.toggle('open', !expanded);
+}
+
 function renderCalendar() {
   const weekNum = getCurrentWeek();
   const programStart = new Date(CONFIG.session.programStartDate);
@@ -1811,20 +1884,29 @@ function renderCalendar() {
 
   const timelineHTML = weeks.map(([, week], i) => {
     const wNum = i + 1;
-    const state = wNum < weekNum ? 'past' : wNum === weekNum ? 'current' : 'future';
+    const weekState = wNum < weekNum ? 'past' : wNum === weekNum ? 'current' : 'future';
     const dotCls = wNum < weekNum ? 'done' : wNum === weekNum ? 'current' : '';
     const objectives = (week.objectives || [])
       .map(id => (OBJECTIVES[id] || {}).label || id).join(' · ');
+    const isCurrent = wNum === weekNum;
+    const isOpen = isCurrent;
+    const panelContent = buildJourneyTaskPanel(week, weekState);
 
-    return '<div class="timeline-week ' + state + ' fade-up">'
+    return '<div class="timeline-week ' + weekState + ' fade-up">'
       + '<div class="week-dot ' + dotCls + '"></div>'
       + '<div class="week-content">'
         + '<span class="week-num">Week ' + wNum
-          + (wNum === weekNum ? '<span class="week-current-badge">Now</span>' : '')
+          + (isCurrent ? '<span class="week-current-badge">Now</span>' : '')
         + '</span>'
         + '<h4 class="week-title">' + week.label + '</h4>'
         + '<p class="week-focus">' + objectives + '</p>'
-        + (wNum === weekNum && week.trainerNote ? '<p class="week-trainer-note">' + week.trainerNote + '</p>' : '')
+        + (week.dailyTasks && week.dailyTasks.length
+          ? '<button class="week-expand-btn" aria-expanded="' + isOpen + '" onclick="toggleWeekExpand(this)">'
+            + '<span class="expand-chevron">▶</span> '
+            + (isCurrent ? 'This week\'s tasks' : weekState === 'past' ? 'See tasks' : 'Preview tasks')
+            + '</button>'
+            + '<div class="week-tasks' + (isOpen ? ' open' : '') + '">' + panelContent + '</div>'
+          : '')
       + '</div>'
       + '</div>';
   }).join('');
