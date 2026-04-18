@@ -60,8 +60,8 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
 - [x] Journey expandable schedule — tap any week to see planned task instructions; past weeks muted, current auto-expanded, future previewed (PR #13)
 - [x] Update `.github/copilot-instructions.md` with Overview, family notes, and Journey patterns
 
-## Phase 9 — Three view modes
-- [ ] Simple view — default for all users: one task card, "Done it!" button, week label, "See everything →" link
-- [ ] Advanced view — full tabbed app (existing build), activated by "See everything →", preference in localStorage
-- [ ] "Simple view ←" return link in Advanced header
-- [ ] Trainer view — ⚙ Settings toggle, builds on Advanced: read-only, rep summary, templates, feedback form (PR #14 to be revised)
+## Phase 9 — Three view modes ✅
+- [x] Simple view — default for all users: one task card, "Done it!" button, week label, "See everything →" link (PR #14)
+- [x] Advanced view — full tabbed app, activated by "See everything →", preference in localStorage (PR #14)
+- [x] "Simple view ←" return link in Advanced header (PR #14)
+- [x] Trainer view — ⚙ Settings toggle, builds on Advanced: read-only, rep summary, WhatsApp templates, feedback form (PR #14)
