@@ -907,6 +907,54 @@
 
   #confettiCanvas { position: fixed; inset: 0; z-index: 999; pointer-events: none; display: none; }
 
+  /* ── Family observation notes ────────────────────────────────── */
+  .family-note-block {
+    margin-top: .65rem; padding: .55rem .85rem;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: var(--text-sm);
+  }
+  .family-note-who {
+    font-size: var(--text-xs); font-weight: 600; color: var(--accent);
+    text-transform: uppercase; letter-spacing: .06em; display: block; margin-bottom: .2rem;
+  }
+  .family-note-text { color: var(--ink); line-height: 1.55; display: block; }
+  .family-note-edit {
+    font-size: var(--text-xs); color: var(--muted); margin-top: .3rem;
+    display: inline-block; transition: color .15s; text-decoration: underline; text-underline-offset: 2px;
+  }
+  .family-note-edit:hover { color: var(--accent); }
+  .btn-add-note {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-size: var(--text-xs); color: var(--muted);
+    padding: .3rem 0; margin-top: .5rem; transition: color .15s;
+  }
+  .btn-add-note:hover { color: var(--accent); }
+  .family-note-form { margin-top: .65rem; }
+  .family-note-textarea {
+    width: 100%; font-family: var(--f-body); font-size: var(--text-sm);
+    background: var(--bg); border: 1.5px solid var(--card-border);
+    border-radius: var(--r-sm); padding: .55rem .75rem;
+    color: var(--ink); outline: none; transition: border-color .15s;
+    resize: vertical; min-height: 72px; line-height: 1.55;
+  }
+  .family-note-textarea:focus { border-color: var(--accent); }
+  .family-note-actions { display: flex; gap: .5rem; margin-top: .5rem; }
+  .btn-save-note {
+    background: var(--accent); color: var(--white);
+    border-radius: var(--r-pill); padding: .4rem .9rem;
+    font-size: var(--text-sm); font-weight: 600; transition: background .15s;
+  }
+  .btn-save-note:hover { background: var(--accent-dark); }
+  .btn-cancel-note {
+    background: none; border: 1px solid var(--card-border);
+    border-radius: var(--r-pill); padding: .4rem .9rem;
+    font-size: var(--text-sm); color: var(--muted);
+    transition: border-color .15s, color .15s;
+  }
+  .btn-cancel-note:hover { border-color: var(--accent); color: var(--accent); }
+
   /* ── Display / ambient mode ──────────────────────────────────── */
   .display-mode .app-header,
   .display-mode main,
@@ -1519,6 +1567,20 @@ function renderOverview() {
         + '</div>'
       : '';
 
+    // Family observation note
+    const obs = (state.observations || {})[id];
+    const fmtObsDate = obs ? obs.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) =>
+      new Date(y, m - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })) : '';
+    const familyNoteHTML = obs
+      ? '<div class="family-note-block">'
+          + '<span class="family-note-who">📝 ' + obs.by + ' · ' + fmtObsDate + '</span>'
+          + '<span class="family-note-text">' + obs.text.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>'
+          + '<button class="family-note-edit" onclick="showNoteForm(\'' + id + '\')">Edit note</button>'
+        + '</div>'
+      : (!isComplete
+          ? '<button class="btn-add-note" onclick="showNoteForm(\'' + id + '\')">+ Add a note</button>'
+          : '');
+
     const toggleLabel = isComplete
       ? 'All ' + obj.stages.length + ' stages complete'
       : (stage ? stage.label : 'Stage details');
@@ -1549,6 +1611,7 @@ function renderOverview() {
         + '</button>'
       + '<div class="stage-breakdown">' + stageBreakdown + '</div>'
       + feedbackHTML
+      + familyNoteHTML
       + rewardHTML
     + '</article>';
   }).join('');
@@ -1622,6 +1685,57 @@ function fireConfetti() {
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+}
+
+// ── Family observation notes ──────────────────────────────────
+function showNoteForm(id) {
+  const card = document.querySelector('[data-obj="' + id + '"]');
+  if (!card) return;
+  const existing = (getState().observations || {})[id];
+  card.querySelectorAll('.family-note-block, .btn-add-note').forEach(el => el.style.display = 'none');
+  const old = card.querySelector('.family-note-form');
+  if (old) old.remove();
+  const form = document.createElement('div');
+  form.className = 'family-note-form';
+  form.innerHTML = '<textarea class="family-note-textarea" id="noteTA-' + id
+    + '" placeholder="How did Nova do? Any observations from today\'s session…" maxlength="500">'
+    + (existing ? existing.text.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '')
+    + '</textarea>'
+    + '<div class="family-note-actions">'
+      + '<button class="btn-save-note" onclick="saveNote(\'' + id + '\')">Save</button>'
+      + '<button class="btn-cancel-note" onclick="cancelNote(\'' + id + '\')">Cancel</button>'
+    + '</div>';
+  const reward = card.querySelector('.completion-reward');
+  if (reward) card.insertBefore(form, reward);
+  else card.appendChild(form);
+  const ta = form.querySelector('textarea');
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+}
+
+function cancelNote(id) {
+  const card = document.querySelector('[data-obj="' + id + '"]');
+  if (!card) return;
+  const form = card.querySelector('.family-note-form');
+  if (form) form.remove();
+  card.querySelectorAll('.family-note-block, .btn-add-note').forEach(el => el.style.display = '');
+}
+
+function saveNote(id) {
+  const ta = document.getElementById('noteTA-' + id);
+  if (!ta) return;
+  const text = ta.value.trim();
+  const user = getCurrentUser();
+  const state = getState();
+  const observations = Object.assign({}, state.observations || {});
+  if (text) {
+    observations[id] = { text, date: todayStr(), by: user ? user.name : 'Family' };
+  } else {
+    delete observations[id];
+  }
+  saveState({ observations });
+  renderOverview();
+  scheduleSyncPush();
 }
 
 // ── Feeding ───────────────────────────────────────────────────
@@ -1916,7 +2030,13 @@ function mergeRemoteState(remote) {
 
   const celebrated = Object.assign({}, remote.celebrated || {});
   Object.entries(local.celebrated || {}).forEach(([k, v]) => { if (v) celebrated[k] = true; });
-  const merged = Object.assign({}, remote, { reps, tasks, feeding, celebrated, user: local.user || remote.user });
+
+  const observations = Object.assign({}, remote.observations || {});
+  Object.entries(local.observations || {}).forEach(([id, note]) => {
+    if (!observations[id] || note.date >= observations[id].date) observations[id] = note;
+  });
+
+  const merged = Object.assign({}, remote, { reps, tasks, feeding, celebrated, observations, user: local.user || remote.user });
   localStorage.setItem(STATE_KEY, JSON.stringify(merged));
 }
 
