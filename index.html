@@ -703,6 +703,88 @@
   .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
   .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
+  /* ── Simple view ─────────────────────────────────────────────── */
+  body.view-simple .top-nav,
+  body.view-simple .app-header,
+  body.view-simple main,
+  body.view-simple .bottom-nav { display: none !important; }
+  body.view-simple #simpleView { display: flex; }
+
+  #simpleView {
+    display: none;
+    min-height: 100dvh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+    background: var(--bg);
+  }
+  .simple-inner { max-width: 420px; width: 100%; }
+  .simple-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: .4rem;
+  }
+  .simple-dog-name {
+    font-family: var(--f-display); font-size: var(--text-2xl);
+    font-weight: 700; color: var(--ink);
+  }
+  .simple-week-label {
+    font-size: var(--text-xs); color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .simple-week-goal {
+    font-size: var(--text-base); color: var(--muted);
+    margin-bottom: 1.5rem; font-style: italic;
+  }
+  .simple-task-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-md);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.25rem;
+  }
+  .simple-task-title {
+    font-family: var(--f-display);
+    font-size: var(--text-xl); font-weight: 600;
+    color: var(--ink); margin-bottom: .75rem;
+  }
+  .simple-task-instruction {
+    font-size: var(--text-base); color: var(--ink);
+    line-height: 1.7; margin-bottom: 1.5rem;
+  }
+  .btn-done-it {
+    width: 100%; padding: 1rem;
+    background: var(--accent); color: white; border: none;
+    border-radius: var(--r-pill); font-family: var(--f-body);
+    font-size: var(--text-lg); font-weight: 700; cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-done-it:hover:not(:disabled) { opacity: .88; }
+  .btn-done-it:disabled {
+    background: var(--accent-bg); color: var(--accent); cursor: default;
+  }
+  .simple-done-msg {
+    text-align: center; color: var(--accent);
+    font-size: var(--text-sm); margin-top: .75rem; font-weight: 500;
+  }
+  .btn-see-everything {
+    display: block; width: 100%; text-align: center;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--f-body); font-size: var(--text-sm);
+    color: var(--muted); padding: .6rem;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .btn-see-everything:hover { color: var(--ink); }
+  .btn-simple-return {
+    font-size: var(--text-xs); color: var(--muted);
+    background: none; border: none; cursor: pointer;
+    font-family: var(--f-body); padding: .2rem .4rem;
+    text-decoration: underline; text-underline-offset: 2px;
+    margin-right: .5rem;
+  }
+  .btn-simple-return:hover { color: var(--ink); }
+
   .feedback-task-label { font-size: var(--text-sm); font-weight: 600; color: var(--ink); display: block; margin-bottom: .3rem; }
   .feedback-task-area {
     width: 100%; box-sizing: border-box;
@@ -1231,6 +1313,19 @@
   </div>
 </div>
 
+<!-- ── Simple view ──────────────────────────────────────────── -->
+<div id="simpleView" role="main" aria-label="Today's task">
+  <div class="simple-inner">
+    <div class="simple-header">
+      <span class="simple-dog-name" id="simpleDogName">Nova</span>
+      <span class="simple-week-label" id="simpleWeekLabel"></span>
+    </div>
+    <p class="simple-week-goal" id="simpleWeekGoal"></p>
+    <article class="simple-task-card" id="simpleTaskCard"></article>
+    <button class="btn-see-everything" onclick="switchToAdvanced()">See everything →</button>
+  </div>
+</div>
+
 <!-- ── Desktop top nav ──────────────────────────────────────── -->
 <nav class="top-nav" aria-label="Site navigation">
   <a href="#today" class="top-nav-brand" id="navBrand">Nova</a>
@@ -1240,6 +1335,7 @@
     <li><a href="#feeding">Feeding</a></li>
     <li><a href="#calendar">Journey</a></li>
   </ul>
+  <button class="btn-simple-return" id="navSimpleReturn" onclick="switchToSimple()" title="Back to simple view">← Simple</button>
   <span id="syncPill" class="sync-pill"><span class="sync-dot"></span><span id="syncPillText"></span></span>
   <button class="btn-settings" id="navSettingsBtn" onclick="showSettings()" aria-label="Sync settings" title="Sync settings">⚙</button>
   <button class="user-chip" onclick="showPicker()" aria-label="Switch family member">
@@ -1265,6 +1361,7 @@
     <span class="week-label" id="weekLabel">Loading…</span>
     <p class="week-goal" id="weekGoal"></p>
     <span class="session-countdown" id="sessionCountdown"></span>
+    <button class="btn-simple-return" id="headerSimpleReturn" onclick="switchToSimple()">← Simple view</button>
   </div>
 </header>
 
@@ -2115,6 +2212,70 @@ function initDisplayMode() {
   showSlide();
 }
 
+// ── View mode (Simple / Advanced) ─────────────────────────────
+const VIEW_KEY = 'nova-view-mode';
+
+function isAdvancedMode() {
+  return localStorage.getItem(VIEW_KEY) === 'advanced';
+}
+
+function switchToAdvanced() {
+  localStorage.setItem(VIEW_KEY, 'advanced');
+  applyViewMode();
+  // Scroll to top of app after transition
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+}
+
+function switchToSimple() {
+  localStorage.setItem(VIEW_KEY, 'simple');
+  applyViewMode();
+}
+
+function applyViewMode() {
+  const advanced = isAdvancedMode();
+  document.body.classList.toggle('view-simple', !advanced);
+  document.body.classList.toggle('view-advanced', advanced);
+  if (!advanced) renderSimpleView();
+}
+
+function renderSimpleView() {
+  const weekNum = getCurrentWeek();
+  const week = SCHEDULE['week' + weekNum] || {};
+  const task = (week.dailyTasks || [])[0];
+
+  document.getElementById('simpleDogName').textContent = CONFIG.dog.name;
+  document.getElementById('simpleWeekLabel').textContent = 'Week ' + weekNum;
+  document.getElementById('simpleWeekGoal').textContent = week.label || '';
+
+  const card = document.getElementById('simpleTaskCard');
+  if (!card) return;
+  if (!task) { card.innerHTML = '<p style="color:var(--muted)">No task scheduled yet.</p>'; return; }
+
+  const obj = OBJECTIVES[task.objective] || {};
+  const today = new Date().toISOString().slice(0, 10);
+  const state = getState();
+  const isDone = !!(state.tasks && state.tasks[today] && state.tasks[today][task.objective]);
+
+  card.innerHTML = '<h2 class="simple-task-title">' + (obj.label || task.objective) + '</h2>'
+    + '<p class="simple-task-instruction">' + task.instruction + '</p>'
+    + '<button class="btn-done-it" onclick="simpleDone(\'' + task.objective + '\')"'
+    + (isDone ? ' disabled' : '') + '>'
+    + (isDone ? '✓ Done today!' : 'Done it! ✓')
+    + '</button>'
+    + (isDone ? '<p class="simple-done-msg">Nova would be proud 🐾</p>' : '');
+}
+
+function simpleDone(id) {
+  const today = new Date().toISOString().slice(0, 10);
+  const state = getState();
+  const tasks = Object.assign({}, state.tasks || {});
+  tasks[today] = Object.assign({}, tasks[today] || {}, { [id]: true });
+  saveState({ tasks });
+  scheduleSyncPush();
+  renderSimpleView();
+  renderToday();
+}
+
 // ── Trainer mode ──────────────────────────────────────────────
 
 function isTrainerMode() {
@@ -2444,7 +2605,7 @@ async function syncFromRemote() {
       if (meta) stateSha = meta.sha;
     }
     setSyncStatus('synced');
-    renderToday(); renderOverview(); renderFeeding();
+    renderToday(); renderOverview(); renderFeeding(); renderSimpleView();
   } catch(e) {
     setSyncStatus(e.message === 'no-token' ? '' : 'error');
   } finally {
@@ -2535,6 +2696,7 @@ function init() {
   const user = getCurrentUser();
   if (!user) showPicker();
   updateSettingsUI();
+  applyViewMode();
   applyTrainerMode();
 }
 
