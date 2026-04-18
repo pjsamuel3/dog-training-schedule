@@ -3,7 +3,8 @@
     "less-barking": 1,
     "chill-out-settle": 2,
     "less-reactivity-dogs": 1,
-    "less-reactivity-people": 1
+    "less-reactivity-people": 1,
+    "less-reactivity-cats-horses": 5
   },
   "tasks": {
     "2026-04-18": {
@@ -26,6 +27,6 @@
   },
   "celebrated": {},
   "observations": {},
-  "lastSync": "2026-04-18T18:56:57.947Z",
+  "lastSync": "2026-04-18T18:57:56.795Z",
   "user": "Oliver"
 }
