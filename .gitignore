@@ -9,3 +9,4 @@ playwright-report/
 
 # Private overrides (token, local secrets — never commit)
 config.private.js
+.claude/settings.local.json
