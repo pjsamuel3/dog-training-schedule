@@ -27,10 +27,23 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
 - [x] Role-based family views — parent / child / young child (age-aware)
 - [x] Ambient / kitchen screen mode (`?mode=display`)
 
-## Phase 4 — Copilot instructions
-- [ ] Write `.github/copilot-instructions.md` with design system and component patterns
+## Phase 4 — Copilot instructions ✅
+- [x] Write `.github/copilot-instructions.md` with design system and component patterns
 
-## Phase 5 — Ongoing
-- [ ] GitHub API sync — read/write `state.json` for cross-device rep counts
-- [ ] Feedback reader — surface `feedback/*.md` entries against objectives
-- [ ] PR workflow for trainer to add weekly plan updates
+## Phase 5 — Ongoing ✅
+- [x] GitHub API sync — read/write `state.json` for cross-device rep counts
+  - Reads `state.json` via raw GitHub URL on load (no auth required for public repo)
+  - Writes back via GitHub API PUT after rep/done/fed actions (debounced 3s)
+  - Merge strategy: max reps, union of done/feeding entries
+  - Token stored in `localStorage('nova-github-token')` — never in source
+  - Sync status pill in desktop nav (syncing / synced / error)
+- [x] Feedback reader — surface `feedback/*.md` entries against objectives
+  - Trainer pastes WhatsApp notes into `feedback/YYYY-MM-DD.md`
+  - Sections headed `## objective-id` are matched to progress cards
+  - Most recent matching note shown inline in each progress card
+- [x] `state.json` — initial empty sync file committed
+- [x] `feedback/2026-04-12.md` — example trainer feedback file
+
+## Phase 6 — Future
+- [ ] Token setup UI — settings drawer to paste GitHub PAT without opening console
+- [ ] Feedback submission for family — log observations alongside trainer notes
