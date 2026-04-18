@@ -1,0 +1,5 @@
+# Real config — contains GitHub token, never commit
+config.js
+
+# macOS
+.DS_Store
