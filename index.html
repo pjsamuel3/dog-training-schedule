@@ -768,6 +768,145 @@
   .feedback-text { color: var(--ink); font-style: italic; line-height: 1.55; }
   .feedback-date { color: var(--muted); font-size: var(--text-xs); margin-top: .25rem; display: block; }
 
+  /* ── Overview dashboard ──────────────────────────────────────── */
+  .overview-hero {
+    background: linear-gradient(135deg, var(--ink) 0%, #3D4038 100%);
+    border-radius: var(--r-md); padding: 1.5rem;
+    margin-bottom: 1rem; color: var(--white);
+    position: relative; overflow: hidden;
+  }
+  .overview-hero::before {
+    content: ''; position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(123,158,135,.15);
+  }
+  .overview-hero-tier {
+    font-family: var(--f-display);
+    font-size: var(--text-2xl); font-weight: 600;
+    color: var(--white); line-height: 1.2; margin-bottom: .3rem;
+  }
+  .overview-hero-sub {
+    font-size: var(--text-sm); color: rgba(255,255,255,.72); margin-bottom: 1rem;
+  }
+  .overview-hero-bar-track {
+    background: rgba(255,255,255,.18); border-radius: var(--r-pill); height: 10px; overflow: hidden;
+  }
+  .overview-hero-bar-fill {
+    background: var(--accent); height: 100%; border-radius: var(--r-pill);
+    transition: width .8s cubic-bezier(.4,0,.2,1); min-width: 3px;
+  }
+
+  .overview-phase-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.25rem; }
+  .overview-phase-pill {
+    font-size: var(--text-xs); color: var(--muted);
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--r-pill); padding: .3rem .75rem; white-space: nowrap;
+  }
+  .overview-phase-pill.accent {
+    color: var(--accent); background: var(--accent-bg); border-color: rgba(123,158,135,.3);
+  }
+
+  .overview-category-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--r-md); padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem; box-shadow: var(--shadow-sm);
+  }
+  .overview-category-title {
+    font-size: var(--text-xs); font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: .75rem;
+  }
+  .cat-bar-row { margin-bottom: .65rem; }
+  .cat-bar-row:last-child { margin-bottom: 0; }
+  .cat-bar-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .3rem; }
+  .cat-bar-name { font-size: var(--text-sm); color: var(--ink); }
+  .cat-bar-pct  { font-size: var(--text-xs); color: var(--muted); }
+  .cat-bar-track { background: var(--card-border); border-radius: var(--r-pill); height: 6px; overflow: hidden; }
+  .cat-bar-fill  { background: var(--accent); height: 100%; border-radius: var(--r-pill); transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+  .overview-list { display: flex; flex-direction: column; gap: .75rem; }
+
+  .overview-card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: var(--r-md); padding: 1.25rem;
+    box-shadow: var(--shadow-sm); transition: border-color .3s;
+  }
+  .overview-card.complete { border-color: var(--accent); }
+  .overview-card-header { margin-bottom: .75rem; }
+  .overview-card-title-row {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .3rem;
+  }
+  .overview-card-title { font-family: var(--f-display); font-size: var(--text-lg); font-weight: 600; color: var(--ink); }
+  .overview-status-badge {
+    font-size: var(--text-xs); font-weight: 600;
+    padding: .2rem .55rem; border-radius: var(--r-pill); white-space: nowrap; flex-shrink: 0; line-height: 1.5;
+  }
+  .overview-status-badge.just-started { color: var(--muted); background: var(--bg); border: 1px solid var(--card-border); }
+  .overview-status-badge.in-progress  { color: var(--accent); background: var(--accent-bg); }
+  .overview-status-badge.almost-there { color: var(--blush);  background: var(--blush-bg); }
+  .overview-status-badge.last-push    { color: var(--blush);  background: var(--blush-bg); font-weight: 700; }
+  .overview-status-badge.complete     { color: var(--white);  background: var(--accent); }
+  .overview-card-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+  .overview-cat-chip { font-size: var(--text-xs); color: var(--muted); text-transform: capitalize; }
+  .overview-stage-text { font-size: var(--text-xs); color: var(--muted); }
+  .overview-stage-text::before { content: '·'; margin-right: .4rem; }
+  .overview-rep-bar-track { background: var(--card-border); border-radius: var(--r-pill); height: 6px; overflow: hidden; margin-bottom: .4rem; }
+  .overview-rep-bar-fill { background: var(--accent); height: 100%; border-radius: var(--r-pill); transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .overview-rep-meta { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--muted); margin-bottom: .75rem; }
+
+  .overview-rep-counter { display: flex; align-items: center; gap: .5rem; margin-bottom: .75rem; }
+  .btn-rep-action {
+    background: var(--bg); border: 1.5px solid var(--card-border);
+    border-radius: var(--r-pill); font-size: var(--text-base); font-weight: 600;
+    color: var(--muted); min-height: 40px; padding: 0 1rem;
+    transition: border-color .15s, color .15s; user-select: none;
+  }
+  .btn-rep-action:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-rep-action:active { transform: scale(.95); }
+  .btn-rep-action.plus { flex: 1; background: var(--accent); color: var(--white); border-color: var(--accent); text-align: center; }
+  .btn-rep-action.plus:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+  .rep-counter-count { font-size: var(--text-xl); font-weight: 700; color: var(--ink); min-width: 2.5rem; text-align: center; }
+
+  .stage-breakdown-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; font-size: var(--text-sm); color: var(--muted);
+    padding: .5rem 0; border-top: 1px solid var(--card-border); text-align: left; transition: color .15s;
+  }
+  .stage-breakdown-toggle:hover { color: var(--ink); }
+  .toggle-arrow { font-size: 1rem; line-height: 1; transition: transform .2s; }
+  .stage-breakdown-toggle[aria-expanded="true"] .toggle-arrow { transform: rotate(90deg); }
+  .stage-breakdown { display: none; padding: .25rem 0 .5rem; }
+  .stage-breakdown.open { display: block; }
+  .stage-item { display: flex; align-items: flex-start; gap: .75rem; padding: .45rem 0; border-bottom: 1px solid var(--card-border); }
+  .stage-item:last-child { border-bottom: none; }
+  .stage-item-marker { font-size: .85rem; width: 18px; text-align: center; flex-shrink: 0; margin-top: .1rem; color: var(--muted); }
+  .stage-item.done    .stage-item-marker { color: var(--accent); }
+  .stage-item.current .stage-item-marker { color: var(--blush); }
+  .stage-item-content { flex: 1; }
+  .stage-item-label { font-size: var(--text-sm); color: var(--ink); display: block; }
+  .stage-item.future .stage-item-label { color: var(--muted); }
+  .stage-item-reps, .stage-item-done { font-size: var(--text-xs); color: var(--muted); margin-top: .15rem; display: block; }
+  .stage-item-done { color: var(--accent); }
+
+  .completion-reward {
+    margin-top: .75rem; padding: 1rem 1.1rem;
+    background: linear-gradient(135deg, var(--accent-bg) 0%, var(--blush-bg) 100%);
+    border: 1px solid rgba(123,158,135,.3); border-radius: var(--r-sm); text-align: center;
+  }
+  .reward-message { font-size: var(--text-sm); color: var(--ink); margin-bottom: .65rem; }
+  .reward-code {
+    display: inline-block; font-family: var(--f-display);
+    font-size: var(--text-xl); font-weight: 600; letter-spacing: .06em;
+    color: var(--accent); background: var(--white);
+    border: 2px dashed var(--accent); border-radius: var(--r-sm);
+    padding: .5rem 1.5rem; margin-bottom: .5rem; cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .reward-code:hover { background: var(--accent); color: var(--white); }
+  .reward-sub { font-size: var(--text-xs); color: var(--muted); }
+
+  #confettiCanvas { position: fixed; inset: 0; z-index: 999; pointer-events: none; display: none; }
+
   /* ── Display / ambient mode ──────────────────────────────────── */
   .display-mode .app-header,
   .display-mode main,
@@ -867,7 +1006,7 @@
   <a href="#today" class="top-nav-brand" id="navBrand">Nova</a>
   <ul class="top-nav-links">
     <li><a href="#today">Today</a></li>
-    <li><a href="#progress">Progress</a></li>
+    <li><a href="#overview">Overview</a></li>
     <li><a href="#feeding">Feeding</a></li>
     <li><a href="#calendar">Journey</a></li>
   </ul>
@@ -913,13 +1052,21 @@
 
   <hr class="section-divider">
 
-  <!-- ── Progress ─────────────────────────────────────────────── -->
-  <section id="progress" class="app-section" aria-labelledby="progress-title">
-    <div class="section-header">
-      <h2 class="section-title" id="progress-title">Progress</h2>
-      <p class="section-sub">Rep counts across all goals</p>
+  <!-- ── Overview ────────────────────────────────────────────── -->
+  <section id="overview" class="app-section" aria-label="Training overview">
+    <div class="overview-hero">
+      <h2 class="overview-hero-tier" id="overviewTier">Just getting started</h2>
+      <p class="overview-hero-sub" id="overviewRepSub"></p>
+      <div class="overview-hero-bar-track">
+        <div class="overview-hero-bar-fill" id="overviewHeroBar" style="width:0%"></div>
+      </div>
     </div>
-    <div id="progressList" class="progress-list" aria-live="polite"></div>
+    <div class="overview-phase-row" id="overviewPhaseRow"></div>
+    <div class="overview-category-card">
+      <p class="overview-category-title">Progress by category</p>
+      <div id="categoryBars"></div>
+    </div>
+    <div id="overviewList" class="overview-list" aria-live="polite"></div>
   </section>
 
   <hr class="section-divider">
@@ -946,15 +1093,17 @@
 
 </main>
 
+<canvas id="confettiCanvas"></canvas>
+
 <!-- ── Mobile bottom nav ────────────────────────────────────── -->
 <nav class="bottom-nav" aria-label="Jump to section">
   <a href="#today" class="active">
     <span class="nav-icon">🐾</span>
     <span>Today</span>
   </a>
-  <a href="#progress">
-    <span class="nav-icon">📊</span>
-    <span>Progress</span>
+  <a href="#overview">
+    <span class="nav-icon">◎</span>
+    <span>Overview</span>
   </a>
   <a href="#feeding">
     <span class="nav-icon">🥣</span>
@@ -1205,7 +1354,7 @@ function logRep(id) {
   reps[id] = (reps[id] || 0) + 1;
   saveState({ reps });
   renderToday();
-  renderProgress();
+  renderOverview();
   scheduleSyncPush();
 }
 
@@ -1220,63 +1369,259 @@ function toggleDone(id) {
   scheduleSyncPush();
 }
 
-// ── Progress ──────────────────────────────────────────────────
-function renderProgress() {
-  const reps = getState().reps || {};
-  const list = document.getElementById('progressList');
+// ── Overview ──────────────────────────────────────────────────
+function renderOverview() {
+  const state = getState();
+  const reps = state.reps || {};
+  const celebrated = state.celebrated || {};
+
+  // Hero totals
+  const totalReps   = CONFIG.goals.reduce((s, id) => s + (reps[id] || 0), 0);
+  const totalTarget = CONFIG.goals.reduce((s, id) => s + ((OBJECTIVES[id] || {}).targetReps || 0), 0);
+  const pctOverall  = totalTarget ? Math.min(100, Math.round((totalReps / totalTarget) * 100)) : 0;
+  const tier = pctOverall >= 100 ? 'Programme complete!'
+    : pctOverall >= 90 ? 'One last push!'
+    : pctOverall >= 71 ? 'Almost there!'
+    : pctOverall >= 41 ? 'Good progress'
+    : pctOverall >= 16 ? 'Building momentum'
+    : 'Just getting started';
+
+  setText('overviewTier', tier);
+  setText('overviewRepSub', totalReps + ' of ' + totalTarget + ' reps — keep going!');
+  const heroBar = document.getElementById('overviewHeroBar');
+  if (heroBar) heroBar.style.width = pctOverall + '%';
+
+  // Phase pills
+  const phaseRow = document.getElementById('overviewPhaseRow');
+  if (phaseRow) {
+    const weekNum    = getCurrentWeek();
+    const week       = getWeekData();
+    const next       = getNextSession();
+    const phaseStart = new Date(CONFIG.session.phaseStartDate);
+    const phaseLabel = CONFIG.session.sessionsComplete + ' sessions · Phase started '
+      + phaseStart.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    phaseRow.innerHTML =
+      '<span class="overview-phase-pill accent">' + phaseLabel + '</span>'
+      + '<span class="overview-phase-pill">Week ' + weekNum + ' — ' + week.label + '</span>'
+      + '<span class="overview-phase-pill">📅 Next session ' + formatCountdown(next) + '</span>';
+  }
+
+  // Category bars
+  const catEl = document.getElementById('categoryBars');
+  if (catEl) {
+    const cats = [
+      { id: 'reactivity',      label: '🐕 Reactivity' },
+      { id: 'impulse-control', label: '🧠 Impulse Control' },
+      { id: 'tricks',          label: '⭐ Tricks' },
+      { id: 'play',            label: '🎾 Play' }
+    ];
+    catEl.innerHTML = cats.map(cat => {
+      const goals = CONFIG.goals.filter(id => (OBJECTIVES[id] || {}).category === cat.id);
+      if (!goals.length) return '';
+      const catReps   = goals.reduce((s, id) => s + (reps[id] || 0), 0);
+      const catTarget = goals.reduce((s, id) => s + ((OBJECTIVES[id] || {}).targetReps || 0), 0);
+      const catPct    = catTarget ? Math.min(100, Math.round((catReps / catTarget) * 100)) : 0;
+      return '<div class="cat-bar-row">'
+        + '<div class="cat-bar-header">'
+          + '<span class="cat-bar-name">' + cat.label + '</span>'
+          + '<span class="cat-bar-pct">' + catPct + '%</span>'
+        + '</div>'
+        + '<div class="cat-bar-track"><div class="cat-bar-fill" style="width:' + catPct + '%"></div></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Check for first-time completions and fire confetti
+  const newlyComplete = CONFIG.goals.filter(id => {
+    const obj = OBJECTIVES[id];
+    return obj && (reps[id] || 0) >= obj.targetReps && !celebrated[id];
+  });
+  if (newlyComplete.length) {
+    const updated = Object.assign({}, celebrated);
+    newlyComplete.forEach(id => { updated[id] = true; });
+    saveState({ celebrated: updated });
+    fireConfetti();
+    scheduleSyncPush();
+  }
+
+  // Objective cards
+  const list = document.getElementById('overviewList');
   if (!list) return;
 
   list.innerHTML = CONFIG.goals.map(id => {
     const obj = OBJECTIVES[id];
     if (!obj) return '';
-    const total = reps[id] || 0;
-    const pct = Math.min(100, Math.round((total / obj.targetReps) * 100));
-    const graduated = total >= obj.targetReps;
+    const total     = reps[id] || 0;
+    const target    = obj.targetReps;
+    const pct       = Math.min(100, Math.round((total / target) * 100));
+    const isComplete = total >= target;
 
-    let stageIdx = 0, cumulativeReps = 0;
+    // Stage calc
+    let stageIdx = 0, stageStartReps = 0;
     for (let i = 0; i < obj.stages.length; i++) {
-      if (total >= cumulativeReps + obj.stages[i].targetReps) {
-        cumulativeReps += obj.stages[i].targetReps;
+      if (total >= stageStartReps + obj.stages[i].targetReps) {
+        stageStartReps += obj.stages[i].targetReps;
         stageIdx = i + 1;
       } else break;
     }
     stageIdx = Math.min(stageIdx, obj.stages.length - 1);
-    const stage = obj.stages[stageIdx];
+    const stage         = obj.stages[stageIdx];
     const stageProgress = total - obj.stages.slice(0, stageIdx).reduce((a, s) => a + s.targetReps, 0);
-    const stagePct = stage ? Math.min(100, Math.round((stageProgress / stage.targetReps) * 100)) : 100;
 
-    const dots = obj.stages.map((s, i) => {
-      const stageEnd = obj.stages.slice(0, i + 1).reduce((a, x) => a + x.targetReps, 0);
-      const cls = total >= stageEnd ? 'done' : (i === stageIdx ? 'active' : '');
-      return '<span class="stage-dot ' + cls + '" title="' + s.label + '"></span>';
+    // Status badge
+    let badgeLabel, badgeCls;
+    if (isComplete)    { badgeLabel = 'Complete';      badgeCls = 'complete'; }
+    else if (pct >= 90){ badgeLabel = 'One last push'; badgeCls = 'last-push'; }
+    else if (pct >= 51){ badgeLabel = 'Almost there';  badgeCls = 'almost-there'; }
+    else if (total > 0){ badgeLabel = 'In progress';   badgeCls = 'in-progress'; }
+    else               { badgeLabel = 'Just started';  badgeCls = 'just-started'; }
+
+    const catEmoji = categoryEmoji(obj.category);
+    const catName  = (obj.category || '').replace(/-/g, ' ');
+
+    // Stage breakdown rows
+    const stageBreakdown = obj.stages.map((s, i) => {
+      const sStart  = obj.stages.slice(0, i).reduce((a, x) => a + x.targetReps, 0);
+      const sEnd    = sStart + s.targetReps;
+      const sDone    = total >= sEnd;
+      const sCurrent = !isComplete && i === stageIdx;
+      const sReps    = sCurrent ? Math.max(0, total - sStart) : null;
+      const cls = sDone ? 'done' : sCurrent ? 'current' : 'future';
+      return '<div class="stage-item ' + cls + '">'
+        + '<span class="stage-item-marker">' + (sDone ? '✓' : sCurrent ? '◉' : '○') + '</span>'
+        + '<div class="stage-item-content">'
+          + '<span class="stage-item-label">' + s.label + '</span>'
+          + (sCurrent ? '<span class="stage-item-reps">' + sReps + ' / ' + s.targetReps + ' reps this stage</span>' : '')
+          + (sDone ? '<span class="stage-item-done">Complete</span>' : '')
+        + '</div>'
+        + '</div>';
     }).join('');
 
-    return '<article class="progress-card fade-up' + (graduated ? ' graduated' : '') + '">'
-      + '<div class="progress-header-row">'
-        + '<h3 class="progress-title">' + obj.label + '</h3>'
-        + (graduated
-            ? '<span class="progress-badge-done">Complete 🎉</span>'
-            : '<span class="progress-stage-badge">Stage ' + (stageIdx + 1) + ' / ' + obj.stages.length + '</span>')
+    // Trainer feedback
+    const fb = getFeedbackForObjective(id);
+    const feedbackHTML = fb ? (function() {
+      const d = fb.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) =>
+        new Date(y, m - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));
+      return '<div class="progress-feedback">'
+        + '<span class="feedback-label">Trainer note · ' + d + '</span>'
+        + '<span class="feedback-text">' + fb.note.split('\n')[0].replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</span>'
+        + '</div>';
+    })() : '';
+
+    // Completion reward
+    const rewardHTML = (isComplete && CONFIG.completionReward)
+      ? '<div class="completion-reward">'
+          + '<p class="reward-message">Objective complete! Show this code to your trainer:</p>'
+          + '<button class="reward-code" onclick="copyRewardCode(this)" data-code="' + CONFIG.completionReward.code + '">'
+            + CONFIG.completionReward.code
+          + '</button>'
+          + '<p class="reward-sub">' + CONFIG.completionReward.message + '</p>'
+        + '</div>'
+      : '';
+
+    const toggleLabel = isComplete
+      ? 'All ' + obj.stages.length + ' stages complete'
+      : (stage ? stage.label : 'Stage details');
+
+    return '<article class="overview-card fade-up' + (isComplete ? ' complete' : '') + '" data-obj="' + id + '">'
+      + '<div class="overview-card-header">'
+        + '<div class="overview-card-title-row">'
+          + '<h3 class="overview-card-title">' + obj.label + '</h3>'
+          + '<span class="overview-status-badge ' + badgeCls + '">' + badgeLabel + '</span>'
+        + '</div>'
+        + '<div class="overview-card-meta">'
+          + '<span class="overview-cat-chip">' + catEmoji + ' ' + catName + '</span>'
+          + (!isComplete ? '<span class="overview-stage-text">Stage ' + (stageIdx + 1) + ' of ' + obj.stages.length + '</span>' : '')
+        + '</div>'
       + '</div>'
-      + '<p class="progress-stage-name">' + (stage ? stage.label : 'Complete') + '</p>'
-      + '<div class="progress-bar-track"><div class="progress-bar-fill' + (graduated ? ' graduated' : '') + '" style="width:' + pct + '%"></div></div>'
-      + '<div class="progress-meta-row"><span>' + total + ' / ' + obj.targetReps + ' reps total</span>'
-        + '<span>' + (graduated ? 'Goal reached!' : (obj.targetReps - total) + ' to go') + '</span></div>'
-      + '<div class="stage-dots">' + dots + '</div>'
-      + (!graduated ? '<p class="progress-stage-detail">' + stageProgress + ' / ' + (stage ? stage.targetReps : '?') + ' this stage</p>' : '')
-      + (function() {
-          const fb = getFeedbackForObjective(id);
-          if (!fb) return '';
-          const d = fb.date.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) =>
-            new Date(y, m - 1, day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));
-          return '<div class="progress-feedback"><span class="feedback-label">Trainer feedback</span>'
-            + '<span class="feedback-text">' + fb.note.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>') + '</span>'
-            + '<span class="feedback-date">' + d + '</span></div>';
-        })()
-      + '</article>';
+      + '<div class="overview-rep-bar-track"><div class="overview-rep-bar-fill" style="width:' + pct + '%"></div></div>'
+      + '<div class="overview-rep-meta"><span>' + total + ' / ' + target + ' reps</span><span>' + pct + '%</span></div>'
+      + (!isComplete
+          ? '<div class="overview-rep-counter">'
+              + '<button class="btn-rep-action minus" onclick="decrementRep(\'' + id + '\')" aria-label="Remove rep">−</button>'
+              + '<span class="rep-counter-count">' + total + '</span>'
+              + '<button class="btn-rep-action plus" onclick="logRep(\'' + id + '\')" aria-label="Log a rep">+ rep</button>'
+            + '</div>'
+          : '')
+      + '<button class="stage-breakdown-toggle" onclick="toggleStageBreakdown(this)" aria-expanded="false">'
+          + '<span>' + toggleLabel + '</span>'
+          + '<span class="toggle-arrow">›</span>'
+        + '</button>'
+      + '<div class="stage-breakdown">' + stageBreakdown + '</div>'
+      + feedbackHTML
+      + rewardHTML
+    + '</article>';
   }).join('');
 
   observeFadeUps(list);
+}
+
+function decrementRep(id) {
+  const state = getState();
+  const reps = state.reps || {};
+  if ((reps[id] || 0) <= 0) return;
+  reps[id] = reps[id] - 1;
+  saveState({ reps });
+  renderToday();
+  renderOverview();
+  scheduleSyncPush();
+}
+
+function toggleStageBreakdown(btn) {
+  const breakdown = btn.nextElementSibling;
+  const open = breakdown.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(open));
+}
+
+function copyRewardCode(btn) {
+  const code = btn.dataset.code;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }).catch(() => {});
+}
+
+function fireConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+  const colors = ['#7B9E87', '#C9A99A', '#A8C5B0', '#EBF0EC', '#5C8268', '#F5EBE8', '#E5DDD3'];
+  const particles = Array.from({ length: 110 }, () => ({
+    x:    Math.random() * canvas.width,
+    y:    -(Math.random() * canvas.height * 0.3),
+    w:    Math.random() * 10 + 4,
+    h:    Math.random() * 6 + 3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx:   (Math.random() - 0.5) * 4,
+    vy:   Math.random() * 3 + 1.5,
+    rot:  Math.random() * Math.PI * 2,
+    rotV: (Math.random() - 0.5) * 0.14
+  }));
+  const start = performance.now();
+  const dur   = 3500;
+  function frame(now) {
+    const elapsed = now - start;
+    if (elapsed > dur) { canvas.style.display = 'none'; ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const alpha = Math.max(0, 1 - elapsed / dur);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.04; p.rot += p.rotV;
+      if (p.y > canvas.height + 20) p.y = -20;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 // ── Feeding ───────────────────────────────────────────────────
@@ -1569,7 +1914,9 @@ function mergeRemoteState(remote) {
     feeding[day] = Object.assign({}, feeding[day] || {}, slots);
   });
 
-  const merged = Object.assign({}, remote, { reps, tasks, feeding, user: local.user || remote.user });
+  const celebrated = Object.assign({}, remote.celebrated || {});
+  Object.entries(local.celebrated || {}).forEach(([k, v]) => { if (v) celebrated[k] = true; });
+  const merged = Object.assign({}, remote, { reps, tasks, feeding, celebrated, user: local.user || remote.user });
   localStorage.setItem(STATE_KEY, JSON.stringify(merged));
 }
 
@@ -1587,7 +1934,7 @@ async function syncFromRemote() {
       if (meta) stateSha = meta.sha;
     }
     setSyncStatus('synced');
-    renderToday(); renderProgress(); renderFeeding();
+    renderToday(); renderOverview(); renderFeeding();
   } catch(e) {
     setSyncStatus(e.message === 'no-token' ? '' : 'error');
   } finally {
@@ -1644,7 +1991,7 @@ async function loadFeedback() {
       parseFeedbackFile(text, date, entries);
     }
     feedbackCache = entries;
-    renderProgress();
+    renderOverview();
   } catch(e) { /* feedback is optional */ }
 }
 
@@ -1672,7 +2019,7 @@ function getFeedbackForObjective(id) {
 function init() {
   renderHeader();
   renderToday();
-  renderProgress();
+  renderOverview();
   renderFeeding();
   renderCalendar();
   const user = getCurrentUser();

@@ -11,9 +11,11 @@ Give every family member one clear thing to do with Nova today — and make it e
 | Anchor | Label | Purpose |
 |--------|-------|---------|
 | `#today` | Today | This week's goal, today's tasks, who's done what |
-| `#progress` | Progress | Rep counters per objective, stage indicator |
+| `#overview` | Overview | Gamified training dashboard — programme progress, objective cards, rewards |
 | `#feeding` | Feeding | Food log — times, amounts, check-off by name |
 | `#calendar` | Journey | Milestone timeline, full programme overview |
+
+`#overview` replaces the former `#progress` tab. Rep-logging (+/−) is now inline within each objective card in Overview — Progress is no longer a separate nav destination.
 
 Ambient/display mode is a separate URL param (`?mode=display`) — not a nav section.
 
@@ -74,9 +76,100 @@ Ambient/display mode is a separate URL param (`?mode=display`) — not a nav sec
 
 ## Navigation
 
-- **Mobile/tablet:** fixed bottom tab bar — thumb-reachable, 4 tabs (Today · Progress · Feeding · Journey)
+- **Mobile/tablet:** fixed bottom tab bar — thumb-reachable, 4 tabs (Today · Overview · Feeding · Journey)
 - **Desktop / kitchen screen:** sticky top bar, frosted glass
 - Active state via `IntersectionObserver`
+- "Progress" tab removed; rep-logging lives inside Overview objective cards
+
+---
+
+## Overview Dashboard
+
+### Purpose
+Inspires the owner to keep training. Progress feels visible and rewarding rather than clinical. Gamified: every rep logged moves a bar, every objective completed earns a reward.
+
+### Tone
+Warm and encouraging. Phrases like "Building momentum" and "Almost there!" — not "33% complete". Language is for a dog owner in the kitchen, not a project manager.
+
+### Layout (top to bottom)
+
+**1. Hero progress strip**
+- Big headline: progress tier label (see tiers below)
+- Subtitle: total reps logged vs total target reps, written naturally ("147 of 450 reps — keep going!")
+- Full-width animated progress bar in `--accent`
+
+Progress tiers (based on total reps / total target reps):
+
+| Range | Label |
+|-------|-------|
+| 0–15% | "Just getting started" |
+| 16–40% | "Building momentum" |
+| 41–70% | "Good progress" |
+| 71–89% | "Almost there!" |
+| 90–99% | "One last push!" |
+| 100% | "Programme complete!" |
+
+**2. Phase summary row**
+- Sessions completed badge: `6 sessions · Phase started 14 Mar`
+- Current week label from `SCHEDULE[weekN].label`
+- Next Saturday session date (computed from today)
+
+**3. Category mini-bars**
+Four compact rows — one per category: Reactivity · Impulse Control · Tricks · Play
+- Each: category label + slim progress bar (sum reps / sum targets for that category's active objectives)
+- Lets the owner see at a glance which category needs attention
+
+**4. Objective cards (the drill-down from old Progress)**
+One card per active objective from `CONFIG.goals`, in order.
+
+Each card contains:
+- Header row: objective label + category chip + status badge
+- Stage indicator: "Stage 2 of 3 — Loose-lead walking with dogs in view"
+- Stage breakdown (expandable chevron): Stage 1 ✓ · Stage 2 ← current · Stage 3
+- Rep progress bar: reps logged / targetReps, percentage
+- Rep counter: `−` · count · `+` buttons (same action as old Progress)
+- Trainer note (if present): blush-tinted snippet — date + first line
+
+Status badge values:
+
+| Condition | Badge | Colour |
+|-----------|-------|--------|
+| 0 reps | Just started | muted |
+| 1 rep to 50% target | In progress | accent |
+| 51–89% target | Almost there | blush |
+| ≥ 90% target | One last push | blush, bold |
+| = targetReps | Complete | accent, filled |
+
+**5. Completion reward**
+When `state.reps[id] >= OBJECTIVES[id].targetReps`:
+- Card becomes "Complete" state: accent border, filled badge, stage breakdown all ticked
+- On first completion detection: full-screen confetti burst (vanilla CSS + JS, no library)
+- Inline reward block appears on the card:
+  > "Objective complete! Show this code to your trainer:"
+  > `[CONFIG.completionReward.code]` (large, copy-on-tap)
+  > `[CONFIG.completionReward.message]`
+- Confetti fires only once per objective — tracked via `state.celebrated: { objectiveId: true }` (small state addition)
+
+### New config.js field
+
+```js
+completionReward: {
+  code:    "NOVA5OFF",           // trainer sets this
+  message: "5% off your next training package"
+}
+```
+
+### Data sources (no new state shape beyond celebrated)
+
+| Data | Source |
+|------|--------|
+| Rep counts | `state.reps[id]` |
+| Rep targets | `OBJECTIVES[id].targetReps` and per-stage `targetReps` |
+| Categories | `OBJECTIVES[id].category` |
+| Phase/session info | `CONFIG.session` |
+| Week label | `SCHEDULE[weekN].label` |
+| Trainer notes | `feedbackCache` (same pipeline as Today) |
+| Completion tracking | `state.celebrated[id]` (new, persisted to state.json) |
 
 ---
 

@@ -62,6 +62,14 @@ const CONFIG = {
   github: {
     owner: "pjsamuel3",
     repo:  "dog-training-schedule"
+  },
+
+  // ─── Completion reward ──────────────────────────────────────────────────────
+  // Shown when the family completes an objective. Trainer sets the code.
+
+  completionReward: {
+    code:    "NOVA5OFF",
+    message: "5% off your next training package"
   }
 
 };
