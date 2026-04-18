@@ -1,6 +1,19 @@
 {
-  "reps": {},
+  "reps": {
+    "less-barking": 1,
+    "chill-out-settle": 1,
+    "less-reactivity-dogs": 6
+  },
   "tasks": {},
-  "feeding": {},
-  "lastSync": null
+  "feeding": {
+    "2026-04-18": {
+      "08:00": {
+        "fed": true,
+        "by": "Pete",
+        "at": "13:07"
+      }
+    }
+  },
+  "lastSync": null,
+  "user": "Matteo"
 }
