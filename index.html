@@ -2,505 +2,1194 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0D1B2A">
-  <title>PROJECT TITLE</title>
-  <meta name="description" content="PROJECT DESCRIPTION">
-  <meta property="og:title" content="PROJECT TITLE">
-  <meta property="og:description" content="PROJECT DESCRIPTION">
-  <meta property="og:image" content="HERO_IMAGE_URL">
-
-  <!--
-    FONTS — replace with your chosen Google Fonts
-    Current set: Playfair Display (display) + Source Serif 4 (body) + DM Sans (UI) + DM Mono (labels)
-    Pick at https://fonts.google.com — keep it to 3 families max
-  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#7B9E87">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Nova · Training</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
-    /* ════════════════════════════════════════
-       RESET
-    ════════════════════════════════════════ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    img  { display: block; max-width: 100%; }
-    a    { color: inherit; }
 
-    /* ════════════════════════════════════════
-       DESIGN TOKENS — edit these first
-       Every colour, font, shadow and radius
-       in the site should reference these vars.
-    ════════════════════════════════════════ */
-    :root {
-      /* Palette */
-      --bg:          #FAFAF8;   /* page background */
-      --ink:         #0D1B2A;   /* primary text */
-      --ink-soft:    #3D4A58;   /* secondary text */
-      --accent:      #2A7C6F;   /* primary action / accent */
-      --accent-bg:   #E8F5F3;   /* tint of accent */
-      --hi:          #E8763A;   /* highlight / tag colour */
-      --hi-bg:       #FDF0E8;   /* tint of highlight */
-      --card-bg:     #FFFFFF;
-      --card-border: #E6E0D8;
-      --muted:       #7A7269;   /* metadata, placeholders */
-      --white:       #FFFFFF;
+  /* ── Reset ───────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  img  { display: block; max-width: 100%; }
+  button { font: inherit; cursor: pointer; border: none; background: none; }
 
-      /* Typography */
-      --f-display: 'Playfair Display', Georgia, serif;
-      --f-body:    'Source Serif 4', Georgia, serif;
-      --f-ui:      'DM Sans', system-ui, sans-serif;
-      --f-mono:    'DM Mono', monospace;
+  /* ── Design tokens (SPEC.md) ─────────────────────────────────── */
+  :root {
+    --bg:          #F4F1EC;
+    --ink:         #2B2D28;
+    --accent:      #7B9E87;
+    --accent-dark: #5C8268;
+    --accent-bg:   #EBF0EC;
+    --blush:       #C9A99A;
+    --blush-bg:    #F5EBE8;
+    --card-bg:     #FDFAF6;
+    --card-border: #E5DDD3;
+    --muted:       #9A948C;
+    --white:       #FFFFFF;
 
-      /* Elevation */
-      --shadow-sm: 0 1px 4px rgba(13,27,42,.07);
-      --shadow-md: 0 4px 18px rgba(13,27,42,.11);
+    --f-display: 'Playfair Display', Georgia, serif;
+    --f-body:    'DM Sans', system-ui, sans-serif;
 
-      /* Radii */
-      --r-sm:   6px;
-      --r-md:   14px;
-      --r-pill: 999px;
-    }
+    --text-xs:   0.75rem;
+    --text-sm:   0.875rem;
+    --text-base: 1rem;
+    --text-lg:   1.125rem;
+    --text-xl:   1.375rem;
+    --text-2xl:  1.75rem;
+    --text-3xl:  2.25rem;
 
-    /* ════════════════════════════════════════
-       BASE
-    ════════════════════════════════════════ */
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--f-ui);
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      padding-bottom: 68px; /* mobile nav clearance */
-    }
-    @media (min-width: 640px) { body { padding-bottom: 0; } }
+    --shadow-sm: 0 1px 4px rgba(43,45,40,.06);
+    --shadow-md: 0 4px 18px rgba(43,45,40,.10);
+    --r-sm:  8px;
+    --r-md:  16px;
+    --r-pill: 999px;
+  }
 
-    /* ════════════════════════════════════════
-       NAVIGATION — desktop top / mobile bottom
-    ════════════════════════════════════════ */
+  /* ── Base ────────────────────────────────────────────────────── */
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 640px) { body { padding-bottom: 0; padding-top: 54px; } }
 
-    /* Desktop */
-    .top-nav {
-      display: none;
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(250,250,248,.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--card-border);
-    }
-    @media (min-width: 640px) {
-      .top-nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 54px;
-        padding: 0 2rem;
-      }
-    }
-    .top-nav-brand {
-      font-family: var(--f-display);
-      font-size: .95rem; font-weight: 700;
-      color: var(--ink); text-decoration: none;
-    }
-    .top-nav-links { display: flex; list-style: none; }
-    .top-nav-links a {
-      font-family: var(--f-mono);
-      font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none;
-      padding: .55rem .85rem; border-radius: var(--r-sm);
-      transition: color .15s, background .15s;
-    }
-    .top-nav-links a:hover { color: var(--accent); background: var(--accent-bg); }
+  /* ── User picker overlay ─────────────────────────────────────── */
+  .picker-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(43,45,40,.55);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s;
+  }
+  .picker-overlay.visible { opacity: 1; pointer-events: all; }
 
-    /* Mobile fixed bottom */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-      background: var(--white);
-      border-top: 1px solid var(--card-border);
-      display: flex;
-      box-shadow: 0 -4px 24px rgba(13,27,42,.08);
-      padding-bottom: env(safe-area-inset-bottom, 0);
-    }
-    @media (min-width: 640px) { .bottom-nav { display: none; } }
-    .bottom-nav a {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: .55rem .2rem; min-height: 56px; gap: 3px;
-      text-decoration: none; color: var(--muted);
-      transition: color .15s;
-    }
-    .bottom-nav a.active, .bottom-nav a:hover { color: var(--accent); }
-    .bottom-nav-icon { font-size: 1.25rem; line-height: 1; }
-    .bottom-nav-label {
-      font-family: var(--f-mono);
-      font-size: .58rem; letter-spacing: .04em; text-transform: uppercase;
-    }
+  .picker-card {
+    background: var(--card-bg);
+    border-radius: var(--r-md);
+    padding: 2rem 1.5rem;
+    width: 100%; max-width: 400px;
+    box-shadow: var(--shadow-md);
+  }
+  .picker-title {
+    font-family: var(--f-display);
+    font-size: var(--text-2xl);
+    color: var(--ink);
+    margin-bottom: .25rem;
+  }
+  .picker-sub {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .picker-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+  }
+  .picker-btn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: .35rem;
+    background: var(--bg);
+    border: 2px solid var(--card-border);
+    border-radius: var(--r-md);
+    padding: 1rem .75rem;
+    transition: border-color .15s, background .15s;
+  }
+  .picker-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+  .picker-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--accent);
+    color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: var(--text-lg); font-weight: 600;
+    font-family: var(--f-display);
+  }
+  .picker-name { font-weight: 600; font-size: var(--text-base); color: var(--ink); }
+  .picker-role { font-size: var(--text-xs); color: var(--muted); }
 
-    /* ════════════════════════════════════════
-       HERO
-    ════════════════════════════════════════ */
-    .hero {
-      position: relative;
-      height: 100svh; min-height: 520px; max-height: 900px;
-      overflow: hidden; display: flex; align-items: flex-end;
-    }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background-color: #0D2B3E; /* fallback — always keep this */
-      /* background-image set by JS for load animation */
-      background-size: cover; background-position: center 35%;
-      transition: transform 8s ease; transform: scale(1.04);
-    }
-    .hero-bg.loaded { transform: scale(1); }
-    .hero-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(10,20,35,.90) 0%, rgba(10,20,35,.45) 45%, rgba(10,20,35,.10) 100%);
-    }
-    .hero-content {
-      position: relative; z-index: 1;
-      width: 100%; max-width: 900px; margin: 0 auto;
-      padding: 3rem 1.5rem 2.5rem;
-    }
-    @media (min-width: 640px) { .hero-content { padding: 4rem 2.5rem 3.5rem; } }
+  /* ── Desktop top nav ─────────────────────────────────────────── */
+  .top-nav {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(253,250,246,.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--card-border);
+    height: 54px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    gap: 1rem;
+  }
+  @media (min-width: 640px) { .top-nav { display: flex; } }
 
-    .hero-eyebrow {
-      font-family: var(--f-mono);
-      font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
-      color: rgba(255,255,255,.65); margin-bottom: .75rem;
-    }
-    .hero-title {
-      font-family: var(--f-display);
-      font-size: clamp(3.5rem, 14vw, 9rem);
-      font-weight: 900; line-height: .88; letter-spacing: -.03em;
-      color: #fff; margin-bottom: .6rem;
-    }
-    .hero-sub {
-      font-family: var(--f-body); font-style: italic;
-      font-size: clamp(1rem, 2.8vw, 1.3rem);
-      color: rgba(255,255,255,.75); margin-bottom: 2.2rem;
-    }
-    .hero-pills { display: flex; gap: .45rem; flex-wrap: wrap; }
-    .hero-pill {
-      display: inline-flex; flex-direction: column; align-items: center;
-      padding: .35rem .85rem;
-      background: rgba(255,255,255,.12); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,.22); border-radius: var(--r-pill);
-      text-decoration: none; transition: background .2s, border-color .2s;
-    }
-    .hero-pill:hover { background: rgba(255,255,255,.26); border-color: rgba(255,255,255,.45); }
-    .hero-pill-label { font-family: var(--f-ui); font-size: .8rem; font-weight: 500; color: #fff; }
-    .hero-pill-sub   { font-family: var(--f-mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+  .top-nav-brand {
+    font-family: var(--f-display);
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--ink); text-decoration: none;
+    white-space: nowrap;
+  }
+  .top-nav-links { display: flex; list-style: none; gap: .25rem; }
+  .top-nav-links a {
+    font-size: var(--text-sm); font-weight: 500;
+    color: var(--muted); text-decoration: none;
+    padding: .4rem .75rem; border-radius: var(--r-pill);
+    transition: color .15s, background .15s;
+  }
+  .top-nav-links a:hover,
+  .top-nav-links a.active { color: var(--accent); background: var(--accent-bg); }
 
-    /* ════════════════════════════════════════
-       SECTION CHAPTER HEADERS (photo + overlay)
-    ════════════════════════════════════════ */
-    .day-section { margin-top: 2px; }
+  .user-chip {
+    display: flex; align-items: center; gap: .4rem;
+    background: var(--accent-bg);
+    border: 1px solid rgba(123,158,135,.3);
+    border-radius: var(--r-pill);
+    padding: .3rem .75rem .3rem .5rem;
+    color: var(--accent); font-size: var(--text-sm); font-weight: 500;
+    transition: background .15s;
+    white-space: nowrap;
+  }
+  .user-chip:hover { background: var(--accent); color: var(--white); }
+  .user-chip-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent); color: var(--white);
+    font-size: .65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .user-chip:hover .user-chip-avatar { background: rgba(255,255,255,.3); }
 
-    .chapter-header {
-      position: relative;
-      height: 220px; background-color: #1A2B3E; /* fallback */
-      background-size: cover; background-position: center;
-      overflow: hidden; display: flex; align-items: flex-end;
-    }
-    @media (min-width: 640px) { .chapter-header { height: 290px; } }
+  /* ── App header ──────────────────────────────────────────────── */
+  .app-header {
+    background: linear-gradient(150deg, #5C8268 0%, var(--accent) 55%, #A8C5B0 100%);
+    color: var(--white);
+    padding: calc(1.5rem + env(safe-area-inset-top)) 1.5rem 0;
+  }
+  @media (min-width: 640px) { .app-header { display: none; } }
 
-    /* Add per-section classes with background-image + background-color fallback:
-       .ch-section-one { background-color: #1A2030; background-image: url('UNSPLASH_URL'); }
-    */
+  .app-header-inner {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem; margin-bottom: 1.25rem;
+  }
+  .dog-name {
+    font-family: var(--f-display);
+    font-size: var(--text-3xl); font-weight: 600;
+    line-height: 1.1; color: var(--white);
+  }
+  .dog-meta {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,.72);
+    margin-top: .2rem;
+  }
+  .header-user-chip {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: var(--r-pill);
+    padding: .35rem .85rem .35rem .5rem;
+    color: var(--white); font-size: var(--text-sm); font-weight: 500;
+    display: flex; align-items: center; gap: .4rem;
+    flex-shrink: 0; margin-top: .25rem;
+    transition: background .15s;
+  }
+  .header-user-chip:hover { background: rgba(255,255,255,.28); }
+  .header-user-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    font-size: .65rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-    .chapter-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(10,20,35,.88) 0%, rgba(10,20,35,.15) 100%);
-    }
-    .chapter-text {
-      position: relative; z-index: 1;
-      padding: 1.4rem 1.5rem; width: 100%; max-width: 900px; margin: 0 auto;
-    }
-    @media (min-width: 640px) { .chapter-text { padding: 2rem 2.5rem; } }
+  /* Week banner */
+  .week-banner {
+    background: rgba(255,255,255,.14);
+    backdrop-filter: blur(8px);
+    border-radius: var(--r-md) var(--r-md) 0 0;
+    border: 1px solid rgba(255,255,255,.22);
+    border-bottom: none;
+    padding: 1rem 1.25rem 1.25rem;
+  }
+  .week-label {
+    font-size: var(--text-xs);
+    color: rgba(255,255,255,.7);
+    text-transform: uppercase; letter-spacing: .08em;
+    display: block; margin-bottom: .3rem;
+  }
+  .week-goal {
+    font-family: var(--f-display);
+    font-size: var(--text-xl); font-weight: 600;
+    color: var(--white); line-height: 1.3;
+    margin-bottom: .4rem;
+  }
+  .session-countdown {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,.72);
+    display: flex; align-items: center; gap: .35rem;
+  }
 
-    .section-tag {
-      display: inline-block;
-      font-family: var(--f-mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--hi); background: rgba(232,118,58,.14); border: 1px solid rgba(232,118,58,.3);
-      border-radius: var(--r-pill); padding: .22rem .65rem; margin-bottom: .45rem;
-    }
-    .chapter-text h2 {
-      font-family: var(--f-display);
-      font-size: clamp(1.9rem, 6vw, 3rem); font-weight: 700;
-      line-height: 1.0; letter-spacing: -.02em; color: #fff;
-    }
-    .chapter-note { font-family: var(--f-body); font-style: italic; font-size: .88rem; color: rgba(255,255,255,.65); margin-top: .3rem; }
+  /* ── Bottom nav ──────────────────────────────────────────────── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: var(--card-bg);
+    border-top: 1px solid var(--card-border);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -2px 20px rgba(43,45,40,.07);
+  }
+  @media (min-width: 640px) { .bottom-nav { display: none; } }
+  .bottom-nav a {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3px; padding: .55rem .25rem; min-height: 56px;
+    text-decoration: none; color: var(--muted);
+    font-size: var(--text-xs); font-weight: 500;
+    transition: color .15s;
+  }
+  .bottom-nav a.active,
+  .bottom-nav a:hover { color: var(--accent); }
+  .nav-icon { font-size: 1.25rem; line-height: 1; }
 
-    /* ════════════════════════════════════════
-       SECTION BODY
-    ════════════════════════════════════════ */
-    .section-body {
-      max-width: 900px; margin: 0 auto;
-      padding: 1.5rem 1.25rem 3rem;
-    }
-    @media (min-width: 640px) { .section-body { padding: 2.5rem 2.5rem 4rem; } }
+  /* ── Section layout ──────────────────────────────────────────── */
+  .app-section {
+    padding: 1.75rem 1.25rem 3rem;
+    max-width: 680px; margin: 0 auto;
+  }
+  @media (min-width: 640px) { .app-section { padding: 2.5rem 2rem 4rem; } }
 
-    .context-note {
-      font-family: var(--f-body); font-style: italic; font-size: .95rem;
-      color: var(--ink-soft); background: var(--accent-bg);
-      border-left: 3px solid var(--accent);
-      border-radius: 0 var(--r-sm) var(--r-sm) 0;
-      padding: .75rem 1rem; margin-bottom: 1.5rem;
-    }
+  .section-header { margin-bottom: 1.25rem; }
+  .section-title {
+    font-family: var(--f-display);
+    font-size: var(--text-2xl); font-weight: 600;
+    color: var(--ink); line-height: 1.2;
+  }
+  .section-sub {
+    font-size: var(--text-sm); color: var(--muted);
+    margin-top: .2rem;
+  }
+  .section-divider {
+    height: 1px; background: var(--card-border);
+    margin: 0; border: none;
+  }
 
-    /* ════════════════════════════════════════
-       CARDS
-    ════════════════════════════════════════ */
-    .cards { display: flex; flex-direction: column; gap: .75rem; }
+  /* ── Trainer note ────────────────────────────────────────────── */
+  .trainer-note {
+    display: flex; align-items: flex-start; gap: .6rem;
+    background: var(--blush-bg);
+    border: 1px solid rgba(201,169,154,.3);
+    border-left: 3px solid var(--blush);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: .8rem 1rem;
+    font-size: var(--text-sm); font-style: italic;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .note-icon { font-size: 1rem; flex-shrink: 0; margin-top: .1rem; }
 
-    .card {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: var(--r-md); overflow: hidden; display: flex;
-      box-shadow: var(--shadow-sm); transition: transform .2s, box-shadow .2s;
-    }
-    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  /* ── Task cards ──────────────────────────────────────────────── */
+  .task-list { display: flex; flex-direction: column; gap: .75rem; }
 
-    /* Colour-coded left rail — add classes to match your categories */
-    .rail               { width: 4px; flex-shrink: 0; }
-    .rail-accent        { background: var(--accent); }
-    .rail-hi            { background: var(--hi); }
-    .rail-green         { background: #27AE60; }
-    .rail-blue          { background: #2980B9; }
-    .rail-purple        { background: #7C5CE7; }
-    .rail-red           { background: #E74C3C; }
+  .task-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    transition: border-color .2s, background .2s;
+  }
+  .task-card.done-today {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .task-header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .5rem; margin-bottom: .6rem;
+  }
+  .task-category {
+    font-size: var(--text-xs); color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .task-reps-target {
+    font-size: var(--text-xs); font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: .15rem .5rem; border-radius: var(--r-pill);
+  }
+  .task-title {
+    font-family: var(--f-display);
+    font-size: var(--text-lg); font-weight: 600;
+    color: var(--ink); margin-bottom: .6rem;
+  }
+  .task-instruction {
+    font-size: var(--text-base);
+    color: var(--ink); line-height: 1.65;
+    margin-bottom: .75rem;
+  }
+  .task-tip {
+    font-size: var(--text-sm); color: var(--muted);
+    background: var(--bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: .6rem .85rem;
+    margin-bottom: .75rem;
+    font-style: italic;
+  }
+  .task-actions {
+    display: flex; align-items: center; gap: .6rem;
+    flex-wrap: wrap;
+  }
+  .btn-rep {
+    display: flex; align-items: center; gap: .5rem;
+    background: var(--accent); color: var(--white);
+    border-radius: var(--r-pill);
+    padding: .55rem 1.1rem;
+    font-size: var(--text-base); font-weight: 600;
+    min-height: 44px;
+    transition: background .15s, transform .1s;
+    user-select: none;
+  }
+  .btn-rep:hover { background: var(--accent-dark); }
+  .btn-rep:active { transform: scale(.96); }
+  .btn-rep.done-state { background: var(--accent-dark); }
+  .rep-count {
+    font-size: var(--text-xl); font-weight: 700;
+    min-width: 1.75rem; text-align: center; line-height: 1;
+  }
+  .rep-label { font-size: var(--text-sm); opacity: .85; }
 
-    .card-inner         { display: flex; gap: .8rem; padding: 1.1rem 1.1rem 1.1rem .95rem; flex: 1; min-width: 0; }
-    .card-emoji         { font-size: 1.55rem; line-height: 1.1; flex-shrink: 0; }
-    .card-body          { flex: 1; min-width: 0; }
+  .btn-done {
+    padding: .55rem 1rem;
+    border-radius: var(--r-pill);
+    font-size: var(--text-sm); font-weight: 500;
+    border: 1px solid var(--card-border);
+    color: var(--muted);
+    min-height: 44px;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .btn-done:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-done.active {
+    background: var(--accent); color: var(--white);
+    border-color: var(--accent);
+  }
+  .young-encourage {
+    margin-top: .75rem;
+    font-size: var(--text-lg); font-weight: 600;
+    color: var(--accent); text-align: center;
+  }
+  .empty-state { text-align: center; padding: 3rem 1rem; }
+  .empty-icon { font-size: 3rem; margin-bottom: .75rem; }
+  .empty-text { font-size: var(--text-base); color: var(--muted); font-style: italic; }
 
-    .card-row1          { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .25rem; }
-    .card-title         { font-family: var(--f-ui); font-size: 1rem; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  /* ── Progress cards ──────────────────────────────────────────── */
+  .progress-list { display: flex; flex-direction: column; gap: .75rem; }
 
-    .badges             { display: flex; gap: .28rem; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
-    .badge              { font-family: var(--f-mono); font-size: .58rem; letter-spacing: .04em; text-transform: uppercase; padding: .18rem .48rem; border-radius: var(--r-pill); white-space: nowrap; }
-    /* Add badge variants to match your content — copy this pattern: */
-    .badge-accent       { background: var(--accent-bg); color: var(--accent); border: 1px solid rgba(42,124,111,.3); }
-    .badge-hi           { background: var(--hi-bg);     color: #B85820;       border: 1px solid rgba(232,118,58,.3); }
-    .badge-free         { background: #EDF7F0;           color: #1A6B3C;       border: 1px solid #88D4A8; }
-    .badge-warn         { background: #FEF9E7;           color: #8A5C1A;       border: 1px solid #F5DFA0; }
-    .badge-book         { background: #EDF2FC;           color: #2C5FAA;       border: 1px solid #A8BEF0; }
+  .progress-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .progress-card.graduated { border-color: var(--blush); }
 
-    .card-desc          { font-family: var(--f-body); font-size: .9rem; color: var(--ink-soft); line-height: 1.65; margin-bottom: .7rem; }
-    .card-meta          { display: flex; flex-wrap: wrap; gap: .3rem .8rem; font-family: var(--f-mono); font-size: .67rem; color: var(--muted); margin-bottom: .75rem; }
-    .card-warning       { display: inline-block; font-size: .8rem; font-weight: 500; color: #9A4820; background: #FEF4EE; border: 1px solid #F5C9A0; border-radius: var(--r-sm); padding: .28rem .6rem; margin-bottom: .65rem; }
-    .card-actions       { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .progress-header-row {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: .5rem;
+    margin-bottom: .2rem;
+  }
+  .progress-title {
+    font-family: var(--f-display);
+    font-size: var(--text-lg); font-weight: 600;
+    color: var(--ink);
+  }
+  .progress-stage-badge {
+    font-size: var(--text-xs); font-weight: 600;
+    color: var(--accent); background: var(--accent-bg);
+    padding: .2rem .55rem; border-radius: var(--r-pill);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .progress-badge-done {
+    font-size: var(--text-xs); font-weight: 600;
+    color: var(--blush); background: var(--blush-bg);
+    padding: .2rem .55rem; border-radius: var(--r-pill);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .progress-stage-name {
+    font-size: var(--text-sm); color: var(--muted);
+    font-style: italic; margin-bottom: .6rem;
+  }
+  .progress-bar-track {
+    background: var(--card-border);
+    border-radius: var(--r-pill);
+    height: 8px; overflow: hidden;
+    margin-bottom: .5rem;
+  }
+  .progress-bar-fill {
+    background: var(--accent); height: 100%;
+    border-radius: var(--r-pill);
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-bar-fill.graduated { background: var(--blush); }
+  .progress-meta-row {
+    display: flex; justify-content: space-between;
+    font-size: var(--text-xs); color: var(--muted);
+    margin-bottom: .6rem;
+  }
+  .stage-dots { display: flex; gap: .4rem; margin-bottom: .5rem; }
+  .stage-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--card-border);
+    transition: background .3s;
+  }
+  .stage-dot.done   { background: var(--accent); }
+  .stage-dot.active { background: var(--blush); }
+  .progress-stage-detail {
+    font-size: var(--text-xs); color: var(--muted);
+  }
 
-    /* Action buttons */
-    .btn                { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--f-ui); font-size: .78rem; font-weight: 500; text-decoration: none; padding: .35rem .78rem; border-radius: var(--r-pill); min-height: 34px; transition: background .15s, color .15s; }
-    .btn-primary        { background: var(--accent-bg); color: var(--accent); border: 1px solid rgba(42,124,111,.2); }
-    .btn-primary:hover  { background: var(--accent); color: #fff; }
-    .btn-secondary      { background: var(--hi-bg); color: #B85820; border: 1px solid rgba(232,118,58,.2); }
-    .btn-secondary:hover{ background: var(--hi); color: #fff; }
+  /* ── Feeding cards ───────────────────────────────────────────── */
+  .feeding-list { display: flex; flex-direction: column; gap: .75rem; }
 
-    /* ════════════════════════════════════════
-       PLACEHOLDER (for TBC sections)
-    ════════════════════════════════════════ */
-    .placeholder {
-      background: linear-gradient(135deg, #f2ede5, var(--accent-bg));
-      border: 2px dashed var(--card-border); border-radius: var(--r-md);
-      padding: 3rem 1.5rem; text-align: center;
-    }
-    .placeholder-icon { font-size: 3rem; margin-bottom: .75rem; }
-    .placeholder-text { font-family: var(--f-body); font-style: italic; font-size: 1.05rem; color: var(--muted); }
+  .feeding-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--r-md);
+    padding: 1.1rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: 1rem;
+    transition: border-color .2s;
+  }
+  .feeding-card.fed     { border-color: var(--accent); }
+  .feeding-card.overdue { border-color: var(--blush); }
+  .feeding-card.due-now { border-color: var(--blush); box-shadow: 0 0 0 3px var(--blush-bg); }
 
-    /* ════════════════════════════════════════
-       FOOTER
-    ════════════════════════════════════════ */
-    footer {
-      background: var(--ink); color: rgba(255,255,255,.55);
-      text-align: center; padding: 3.5rem 1.5rem;
-    }
-    .footer-wordmark    { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: #fff; display: block; margin-bottom: .4rem; }
-    footer p            { font-family: var(--f-body); font-style: italic; font-size: .9rem; }
-    .back-to-top        { display: inline-block; margin-top: 1.5rem; font-family: var(--f-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.45); text-decoration: none; border: 1px solid rgba(255,255,255,.2); border-radius: var(--r-pill); padding: .38rem .85rem; transition: color .15s, border-color .15s; }
-    .back-to-top:hover  { color: rgba(255,255,255,.9); border-color: rgba(255,255,255,.5); }
+  .feeding-icon { font-size: 2rem; flex-shrink: 0; line-height: 1; }
+  .feeding-body { flex: 1; }
+  .feeding-row1 {
+    display: flex; align-items: baseline;
+    justify-content: space-between; gap: .5rem;
+    margin-bottom: .1rem;
+  }
+  .feeding-label {
+    font-family: var(--f-display);
+    font-size: var(--text-lg); font-weight: 600; color: var(--ink);
+  }
+  .feeding-time { font-size: var(--text-sm); color: var(--muted); }
+  .feeding-amount { font-size: var(--text-sm); color: var(--muted); margin-bottom: .5rem; }
+  .feeding-done {
+    font-size: var(--text-sm); font-weight: 500; color: var(--accent);
+  }
+  .feeding-overdue { font-size: var(--text-xs); color: var(--blush); font-weight: 600; margin-top: .3rem; }
+  .feeding-due     { font-size: var(--text-xs); color: var(--blush); font-weight: 600; margin-top: .3rem; }
 
-    /* ════════════════════════════════════════
-       SCROLL ANIMATIONS
-       Add class="fade-up" to any element.
-       JS below handles triggering.
-    ════════════════════════════════════════ */
-    .fade-up    { opacity: 0; transform: translateY(20px); transition: opacity .45s ease, transform .45s ease; }
-    .fade-up.in { opacity: 1; transform: none; }
+  .btn-feed {
+    display: inline-flex; align-items: center;
+    background: var(--accent-bg);
+    border: 1px solid rgba(123,158,135,.3);
+    border-radius: var(--r-pill);
+    padding: .4rem 1rem;
+    font-size: var(--text-sm); font-weight: 500;
+    color: var(--accent);
+    min-height: 36px;
+    transition: background .15s, color .15s;
+  }
+  .btn-feed:hover { background: var(--accent); color: var(--white); }
+
+  /* ── Calendar / timeline ─────────────────────────────────────── */
+  .programme-context {
+    font-size: var(--text-sm); color: var(--muted);
+    margin-bottom: 1.5rem;
+    padding: .75rem 1rem;
+    background: var(--card-bg);
+    border-radius: var(--r-sm);
+    border: 1px solid var(--card-border);
+  }
+  .programme-context strong { color: var(--ink); }
+
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: .55rem; top: 0; bottom: 0;
+    width: 2px; background: var(--card-border);
+  }
+  .timeline-week {
+    position: relative; margin-bottom: 1.5rem;
+  }
+  .week-dot {
+    position: absolute; left: -1.65rem; top: .3rem;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    transition: background .3s;
+  }
+  .week-dot.done    { background: var(--accent); border-color: var(--accent); }
+  .week-dot.current { background: var(--blush); border-color: var(--blush); box-shadow: 0 0 0 4px var(--blush-bg); }
+
+  .week-num {
+    font-size: var(--text-xs); color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+    display: block; margin-bottom: .15rem;
+  }
+  .week-current-badge {
+    display: inline-block;
+    font-size: var(--text-xs); font-weight: 600;
+    color: var(--blush); background: var(--blush-bg);
+    padding: .1rem .45rem; border-radius: var(--r-pill);
+    margin-left: .4rem; vertical-align: middle;
+  }
+  .week-title {
+    font-family: var(--f-display);
+    font-size: var(--text-base); font-weight: 600;
+    color: var(--ink); margin-bottom: .25rem;
+  }
+  .timeline-week.past .week-title  { color: var(--muted); }
+  .timeline-week.future .week-title { color: var(--muted); font-style: italic; }
+  .timeline-week.current .week-title { color: var(--ink); }
+
+  .week-focus {
+    font-size: var(--text-sm); color: var(--muted);
+    margin-bottom: .3rem;
+  }
+  .week-trainer-note {
+    font-size: var(--text-sm); color: var(--muted);
+    font-style: italic; margin-top: .3rem;
+    border-left: 2px solid var(--blush);
+    padding-left: .6rem;
+  }
+
+  /* ── Scroll fade-up ──────────────────────────────────────────── */
+  .fade-up     { opacity: 0; transform: translateY(18px); transition: opacity .45s ease, transform .45s ease; }
+  .fade-up.in  { opacity: 1; transform: none; }
+
+  /* ── Young child view overrides ──────────────────────────────── */
+  .view-young-child .task-card         { border-radius: 20px; padding: 1.5rem; }
+  .view-young-child .task-title        { font-size: var(--text-xl); }
+  .view-young-child .task-instruction  { font-size: var(--text-lg); line-height: 1.75; }
+  .view-young-child .btn-rep           { width: 100%; justify-content: center; padding: .85rem; font-size: var(--text-xl); }
+  .view-young-child .rep-count         { font-size: var(--text-2xl); }
+  .view-young-child .btn-done          { width: 100%; justify-content: center; margin-top: .25rem; }
+  .view-young-child .task-tip          { display: none; }
+
+  /* ── Display / ambient mode ──────────────────────────────────── */
+  .display-mode .app-header,
+  .display-mode main,
+  .display-mode .bottom-nav,
+  .display-mode .top-nav { display: none !important; }
+  .display-mode .display-slide { display: flex !important; }
+
+  .display-slide {
+    position: fixed; inset: 0;
+    background: linear-gradient(150deg, #5C8268, var(--accent));
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 3rem;
+    color: var(--white);
+  }
+  .display-icon  { font-size: 5rem; margin-bottom: 1.5rem; line-height: 1; }
+  .display-title {
+    font-family: var(--f-display);
+    font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 600;
+    line-height: 1.1; margin-bottom: 1rem;
+    color: var(--white);
+  }
+  .display-body {
+    font-size: clamp(1.1rem, 3vw, 1.75rem);
+    color: rgba(255,255,255,.85);
+    max-width: 700px; line-height: 1.5;
+    margin-bottom: .75rem;
+  }
+  .display-sub {
+    font-size: clamp(.9rem, 2vw, 1.25rem);
+    color: rgba(255,255,255,.6);
+    text-transform: uppercase; letter-spacing: .1em;
+  }
+  .display-dots {
+    position: fixed; bottom: 2rem;
+    display: flex; gap: .5rem;
+  }
+  .display-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,.35);
+    transition: background .3s;
+  }
+  .display-dot.active { background: var(--white); }
+
   </style>
 </head>
 <body>
 
-<!-- ── DESKTOP NAV ── -->
-<nav class="top-nav" aria-label="Site navigation">
-  <a href="#top" class="top-nav-brand">SITE TITLE</a>
-  <ul class="top-nav-links">
-    <!-- Duplicate for each section -->
-    <li><a href="#section-one">Section One</a></li>
-    <li><a href="#section-two">Section Two</a></li>
-  </ul>
-</nav>
-
-<!-- ── MOBILE BOTTOM NAV ── -->
-<nav class="bottom-nav" aria-label="Jump to section">
-  <!-- One <a> per section — keep to 5 max -->
-  <a href="#section-one">
-    <span class="bottom-nav-icon">🗺️</span>
-    <span class="bottom-nav-label">One</span>
-  </a>
-  <a href="#section-two">
-    <span class="bottom-nav-icon">📍</span>
-    <span class="bottom-nav-label">Two</span>
-  </a>
-</nav>
-
-<!-- ── HERO ── -->
-<section class="hero" id="top" aria-label="Page introduction">
-  <div class="hero-bg" id="heroBg" role="img" aria-label="Hero image description"></div>
-  <div class="hero-overlay" aria-hidden="true"></div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">EYEBROW TEXT</p>
-    <h1 class="hero-title">TITLE</h1>
-    <p class="hero-sub">One-line subtitle here.</p>
-    <div class="hero-pills">
-      <a href="#section-one" class="hero-pill">
-        <span class="hero-pill-label">🗺️ Section One</span>
-        <span class="hero-pill-sub">sublabel</span>
-      </a>
-      <a href="#section-two" class="hero-pill">
-        <span class="hero-pill-label">📍 Section Two</span>
-        <span class="hero-pill-sub">sublabel</span>
-      </a>
-    </div>
+<!-- ── User picker ───────────────────────────────────────────── -->
+<div id="picker" class="picker-overlay" role="dialog" aria-modal="true" aria-label="Choose family member">
+  <div class="picker-card">
+    <h2 class="picker-title">Who are you?</h2>
+    <p class="picker-sub">Your view will be tailored for you.</p>
+    <div class="picker-grid" id="pickerGrid"></div>
   </div>
-</section>
+</div>
+
+<!-- ── Desktop top nav ──────────────────────────────────────── -->
+<nav class="top-nav" aria-label="Site navigation">
+  <a href="#today" class="top-nav-brand" id="navBrand">Nova</a>
+  <ul class="top-nav-links">
+    <li><a href="#today">Today</a></li>
+    <li><a href="#progress">Progress</a></li>
+    <li><a href="#feeding">Feeding</a></li>
+    <li><a href="#calendar">Journey</a></li>
+  </ul>
+  <button class="user-chip" onclick="showPicker()" aria-label="Switch family member">
+    <span class="user-chip-avatar" id="navAvatarInitial">?</span>
+    <span id="navChipName">Who are you?</span>
+  </button>
+</nav>
+
+<!-- ── App header (mobile) ──────────────────────────────────── -->
+<header class="app-header" id="appHeader">
+  <div class="app-header-inner">
+    <div>
+      <h1 class="dog-name" id="headerDogName">Nova</h1>
+      <p class="dog-meta" id="headerDogMeta"></p>
+    </div>
+    <button class="header-user-chip" onclick="showPicker()" aria-label="Switch family member">
+      <span class="header-user-avatar" id="headerAvatarInitial">?</span>
+      <span id="headerChipName">Who are you?</span>
+    </button>
+  </div>
+  <div class="week-banner">
+    <span class="week-label" id="weekLabel">Loading…</span>
+    <p class="week-goal" id="weekGoal"></p>
+    <span class="session-countdown" id="sessionCountdown"></span>
+  </div>
+</header>
 
 <main>
 
-  <!-- ── SECTION ONE ── -->
-  <section class="day-section" id="section-one" aria-labelledby="s1-h">
-    <!--
-      Chapter header photo:
-      Add a class like .ch-section-one to .chapter-header, then define in CSS:
-      .ch-section-one {
-        background-color: #1A2030;
-        background-image: url('https://images.unsplash.com/photo-PHOTO_ID?auto=format&fit=crop&w=1400&q=80');
-      }
-    -->
-    <div class="chapter-header" role="img" aria-label="Section image description">
-      <div class="chapter-overlay" aria-hidden="true"></div>
-      <div class="chapter-text">
-        <span class="section-tag">TAG · LABEL</span>
-        <h2 id="s1-h">Section One Title</h2>
-        <p class="chapter-note">Brief section subtitle or context</p>
-      </div>
+  <!-- ── Today ────────────────────────────────────────────────── -->
+  <section id="today" class="app-section" aria-labelledby="today-title">
+    <div class="section-header">
+      <h2 class="section-title" id="today-title">Today</h2>
+      <p class="section-sub" id="today-sub"></p>
     </div>
-
-    <div class="section-body">
-      <p class="context-note fade-up">Optional introductory note for this section.</p>
-
-      <div class="cards">
-
-        <!--
-          CARD PATTERN — copy and repeat
-          Rail colours: rail-accent / rail-hi / rail-green / rail-blue / rail-purple / rail-red
-          Badge types:  badge-accent / badge-hi / badge-free / badge-warn / badge-book
-        -->
-        <article class="card fade-up">
-          <div class="rail rail-accent"></div>
-          <div class="card-inner">
-            <span class="card-emoji" aria-hidden="true">🎯</span>
-            <div class="card-body">
-              <div class="card-row1">
-                <h3 class="card-title">Card Title</h3>
-                <div class="badges">
-                  <span class="badge badge-free">Free</span>
-                </div>
-              </div>
-              <p class="card-desc">Card description — 1–3 sentences. Keep it readable on mobile.</p>
-              <div class="card-meta">
-                <span>🕐 Opening hours or detail</span>
-                <span>📌 Extra metadata</span>
-              </div>
-              <div class="card-actions">
-                <a href="LINK" target="_blank" rel="noopener" class="btn btn-primary">📍 Map</a>
-                <a href="LINK" target="_blank" rel="noopener" class="btn btn-secondary">🔗 Website</a>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Add more cards here -->
-
-      </div>
-    </div>
+    <div id="trainerNote" class="trainer-note" style="display:none" aria-label="Trainer note"></div>
+    <div id="taskList" class="task-list" aria-live="polite"></div>
   </section>
 
-  <!-- ── SECTION TWO ── -->
-  <section class="day-section" id="section-two" aria-labelledby="s2-h">
-    <div class="chapter-header" role="img" aria-label="Section image description">
-      <div class="chapter-overlay" aria-hidden="true"></div>
-      <div class="chapter-text">
-        <span class="section-tag">TAG · LABEL</span>
-        <h2 id="s2-h">Section Two Title</h2>
-      </div>
+  <hr class="section-divider">
+
+  <!-- ── Progress ─────────────────────────────────────────────── -->
+  <section id="progress" class="app-section" aria-labelledby="progress-title">
+    <div class="section-header">
+      <h2 class="section-title" id="progress-title">Progress</h2>
+      <p class="section-sub">Rep counts across all goals</p>
     </div>
-    <div class="section-body">
-      <!-- Placeholder for TBC sections -->
-      <div class="placeholder fade-up">
-        <div class="placeholder-icon">🌟</div>
-        <p class="placeholder-text">Content coming soon.</p>
-      </div>
+    <div id="progressList" class="progress-list" aria-live="polite"></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Feeding ──────────────────────────────────────────────── -->
+  <section id="feeding" class="app-section" aria-labelledby="feeding-title">
+    <div class="section-header">
+      <h2 class="section-title" id="feeding-title">Feeding</h2>
+      <p class="section-sub" id="feeding-sub"></p>
     </div>
+    <div id="feedingList" class="feeding-list" aria-live="polite"></div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Journey ──────────────────────────────────────────────── -->
+  <section id="calendar" class="app-section" aria-labelledby="calendar-title">
+    <div class="section-header">
+      <h2 class="section-title" id="calendar-title">Journey</h2>
+      <p class="section-sub">The full training programme</p>
+    </div>
+    <div id="calendarList"></div>
   </section>
 
 </main>
 
-<footer>
-  <span class="footer-wordmark">SITE TITLE</span>
-  <p>Tagline or credit line here.</p>
-  <a href="#top" class="back-to-top">↑ Back to top</a>
-</footer>
+<!-- ── Mobile bottom nav ────────────────────────────────────── -->
+<nav class="bottom-nav" aria-label="Jump to section">
+  <a href="#today" class="active">
+    <span class="nav-icon">🐾</span>
+    <span>Today</span>
+  </a>
+  <a href="#progress">
+    <span class="nav-icon">📊</span>
+    <span>Progress</span>
+  </a>
+  <a href="#feeding">
+    <span class="nav-icon">🥣</span>
+    <span>Feeding</span>
+  </a>
+  <a href="#calendar">
+    <span class="nav-icon">🗓</span>
+    <span>Journey</span>
+  </a>
+</nav>
 
+<!-- ── Ambient display mode ─────────────────────────────────── -->
+<div id="displaySlide" class="display-slide" role="region" aria-label="Kitchen display">
+  <div class="display-dots" id="displayDots"></div>
+</div>
+
+<!-- ── Data files ────────────────────────────────────────────── -->
+<script src="config.js"></script>
+<script src="objectives.js"></script>
+<script src="plan/schedule.js"></script>
+
+<!-- ── App ───────────────────────────────────────────────────── -->
 <script>
-  // ── Scroll-triggered staggered fade-up ──
-  const fadeObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const siblings = [...entry.target.parentElement.children]
-        .filter(el => el.classList.contains('fade-up'));
-      const delay = siblings.indexOf(entry.target) * 75;
-      setTimeout(() => entry.target.classList.add('in'), delay);
-      fadeObserver.unobserve(entry.target);
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+'use strict';
 
-  // ── Active bottom nav link by visible section ──
-  const sections = document.querySelectorAll('.day-section');
-  const navLinks = document.querySelectorAll('.bottom-nav a');
-  const navObserver = new IntersectionObserver(entries => {
+// ── State ─────────────────────────────────────────────────────
+const STATE_KEY = 'nova-state';
+
+function getState() {
+  try { return JSON.parse(localStorage.getItem(STATE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveState(updates) {
+  const s = getState();
+  localStorage.setItem(STATE_KEY, JSON.stringify(Object.assign(s, updates)));
+}
+
+// ── Date helpers ──────────────────────────────────────────────
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+function getCurrentWeek() {
+  const start = new Date(CONFIG.session.phaseStartDate);
+  start.setHours(0, 0, 0, 0);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const days = Math.round((now - start) / (1000 * 60 * 60 * 24));
+  const week = Math.floor(days / 7) + 1;
+  const maxWeek = Object.keys(SCHEDULE).length;
+  return Math.min(Math.max(1, week), maxWeek);
+}
+function getWeekData() {
+  return SCHEDULE['week' + getCurrentWeek()];
+}
+function getNextSession() {
+  const dayMap = { Sunday:0, Monday:1, Tuesday:2, Wednesday:3, Thursday:4, Friday:5, Saturday:6 };
+  const target = dayMap[CONFIG.session.day] ?? 6;
+  const [h, m] = CONFIG.session.time.split(':').map(Number);
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(h, m, 0, 0);
+  let diff = (target - now.getDay() + 7) % 7;
+  if (diff === 0 && now >= next) diff = 7;
+  next.setDate(now.getDate() + diff);
+  return next;
+}
+function formatCountdown(date) {
+  const diff = date - new Date();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  if (days > 1)  return 'in ' + days + ' days';
+  if (days === 1) return 'tomorrow at ' + CONFIG.session.time;
+  if (hours > 0) return 'in ' + hours + ' hours';
+  return 'today at ' + CONFIG.session.time;
+}
+
+// ── User helpers ──────────────────────────────────────────────
+function getCurrentUser() {
+  const name = getState().user;
+  return name ? (CONFIG.family.find(f => f.name === name) || null) : null;
+}
+function getUserRole() {
+  const u = getCurrentUser();
+  if (!u) return 'guest';
+  if (u.role === 'parent') return 'parent';
+  if (u.age < 10) return 'young-child';
+  return 'child';
+}
+function categoryEmoji(cat) {
+  return ({ 'impulse-control': '🧠', reactivity: '🐕', tricks: '⭐', play: '🎾' })[cat] || '🐾';
+}
+
+// ── Fade-up observer ──────────────────────────────────────────
+const fadeObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const siblings = [...e.target.parentElement.children].filter(el => el.classList.contains('fade-up'));
+    setTimeout(() => e.target.classList.add('in'), siblings.indexOf(e.target) * 75);
+    fadeObserver.unobserve(e.target);
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+function observeFadeUps(container) {
+  container.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+}
+
+// ── User picker ───────────────────────────────────────────────
+function showPicker() {
+  document.getElementById('picker').classList.add('visible');
+}
+function hidePicker() {
+  document.getElementById('picker').classList.remove('visible');
+}
+function selectUser(name) {
+  saveState({ user: name });
+  hidePicker();
+  init();
+}
+function renderPicker() {
+  document.getElementById('pickerGrid').innerHTML = CONFIG.family.map(f => {
+    const roleLabel = f.role === 'parent' ? 'Parent' : 'Child · ' + f.age;
+    return '<button class="picker-btn" onclick="selectUser(\'' + f.name + '\')">'
+      + '<div class="picker-avatar">' + f.name[0] + '</div>'
+      + '<span class="picker-name">' + f.name + '</span>'
+      + '<span class="picker-role">' + roleLabel + '</span>'
+      + '</button>';
+  }).join('');
+}
+
+// ── Header ────────────────────────────────────────────────────
+function renderHeader() {
+  const week = getWeekData();
+  const weekNum = getCurrentWeek();
+  const user = getCurrentUser();
+  const next = getNextSession();
+
+  document.title = CONFIG.dog.name + ' · Training';
+  setText('headerDogName', CONFIG.dog.name);
+  setText('navBrand', CONFIG.dog.name);
+  setText('headerDogMeta', CONFIG.dog.breed + ' · ' + CONFIG.dog.age);
+  setText('weekLabel', 'Week ' + weekNum + ' of ' + Object.keys(SCHEDULE).length);
+  setText('weekGoal', week.label);
+  setText('sessionCountdown', '📅 Next session ' + formatCountdown(next));
+
+  const chipName = user ? user.name : 'Who are you?';
+  const initial = user ? user.name[0] : '?';
+  setText('navChipName', chipName);
+  setText('headerChipName', chipName);
+  setText('navAvatarInitial', initial);
+  setText('headerAvatarInitial', initial);
+
+  const role = getUserRole();
+  document.body.className = document.body.className.replace(/\bview-\S+/g, '').trim();
+  document.body.classList.add('view-' + role);
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+// ── Today ──────────────────────────────────────────────────────
+function renderToday() {
+  const week = getWeekData();
+  const weekNum = getCurrentWeek();
+  const role = getUserRole();
+  const state = getState();
+  const done = (state.tasks || {})[todayStr()] || {};
+  const reps = state.reps || {};
+  const user = getCurrentUser();
+
+  setText('today-sub', new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }));
+
+  const noteEl = document.getElementById('trainerNote');
+  if (noteEl) {
+    if (role === 'parent' && week.trainerNote) {
+      noteEl.innerHTML = '<span class="note-icon">🎓</span><span>' + week.trainerNote + '</span>';
+      noteEl.style.display = 'flex';
+    } else {
+      noteEl.style.display = 'none';
+    }
+  }
+
+  let tasks = (week.dailyTasks || []).filter(t => !t.assignedTo || !user || t.assignedTo.includes(user.name));
+  if (role === 'young-child') {
+    const first = tasks.find(t => !done[t.objective]) || tasks[0];
+    tasks = first ? [first] : [];
+  }
+
+  const list = document.getElementById('taskList');
+  if (!list) return;
+
+  if (!tasks.length) {
+    list.innerHTML = '<div class="empty-state"><p class="empty-icon">🌟</p><p class="empty-text">All done for today — brilliant work!</p></div>';
+    return;
+  }
+
+  list.innerHTML = tasks.map(task => {
+    const obj = OBJECTIVES[task.objective] || {};
+    const isDone = !!done[task.objective];
+    const repCount = reps[task.objective] || 0;
+    const catEmoji = categoryEmoji(obj.category);
+    const catLabel = (obj.category || '').replace(/-/g, ' ');
+    const showTip = role !== 'young-child' && task.tip;
+    const encourage = role === 'young-child'
+      ? (repCount >= task.reps ? '🌟 Amazing!' : (task.reps - repCount) + ' more to go!')
+      : '';
+
+    return '<article class="task-card fade-up' + (isDone ? ' done-today' : '') + '" data-obj="' + task.objective + '">'
+      + '<div class="task-header-row">'
+        + '<span class="task-category">' + catEmoji + ' ' + catLabel + '</span>'
+        + '<span class="task-reps-target">' + task.reps + ' reps</span>'
+      + '</div>'
+      + '<h3 class="task-title">' + (obj.label || task.objective) + '</h3>'
+      + '<p class="task-instruction">' + task.instruction + '</p>'
+      + (showTip ? '<div class="task-tip"><strong>Tip:</strong> ' + task.tip + '</div>' : '')
+      + '<div class="task-actions">'
+        + '<button class="btn-rep" onclick="logRep(\'' + task.objective + '\')" aria-label="Log a rep">'
+          + '<span class="rep-count">' + repCount + '</span>'
+          + '<span class="rep-label">+ rep</span>'
+        + '</button>'
+        + '<button class="btn-done' + (isDone ? ' active' : '') + '" onclick="toggleDone(\'' + task.objective + '\')">'
+          + (isDone ? '✓ Done today' : 'Mark done')
+        + '</button>'
+      + '</div>'
+      + (encourage ? '<p class="young-encourage">' + encourage + '</p>' : '')
+      + '</article>';
+  }).join('');
+
+  observeFadeUps(list);
+}
+
+function logRep(id) {
+  const state = getState();
+  const reps = state.reps || {};
+  reps[id] = (reps[id] || 0) + 1;
+  saveState({ reps });
+  renderToday();
+  renderProgress();
+}
+
+function toggleDone(id) {
+  const state = getState();
+  const tasks = state.tasks || {};
+  const key = todayStr();
+  if (!tasks[key]) tasks[key] = {};
+  tasks[key][id] = !tasks[key][id];
+  saveState({ tasks });
+  renderToday();
+}
+
+// ── Progress ──────────────────────────────────────────────────
+function renderProgress() {
+  const reps = getState().reps || {};
+  const list = document.getElementById('progressList');
+  if (!list) return;
+
+  list.innerHTML = CONFIG.goals.map(id => {
+    const obj = OBJECTIVES[id];
+    if (!obj) return '';
+    const total = reps[id] || 0;
+    const pct = Math.min(100, Math.round((total / obj.targetReps) * 100));
+    const graduated = total >= obj.targetReps;
+
+    let stageIdx = 0, cumulativeReps = 0;
+    for (let i = 0; i < obj.stages.length; i++) {
+      if (total >= cumulativeReps + obj.stages[i].targetReps) {
+        cumulativeReps += obj.stages[i].targetReps;
+        stageIdx = i + 1;
+      } else break;
+    }
+    stageIdx = Math.min(stageIdx, obj.stages.length - 1);
+    const stage = obj.stages[stageIdx];
+    const stageProgress = total - obj.stages.slice(0, stageIdx).reduce((a, s) => a + s.targetReps, 0);
+    const stagePct = stage ? Math.min(100, Math.round((stageProgress / stage.targetReps) * 100)) : 100;
+
+    const dots = obj.stages.map((s, i) => {
+      const stageEnd = obj.stages.slice(0, i + 1).reduce((a, x) => a + x.targetReps, 0);
+      const cls = total >= stageEnd ? 'done' : (i === stageIdx ? 'active' : '');
+      return '<span class="stage-dot ' + cls + '" title="' + s.label + '"></span>';
+    }).join('');
+
+    return '<article class="progress-card fade-up' + (graduated ? ' graduated' : '') + '">'
+      + '<div class="progress-header-row">'
+        + '<h3 class="progress-title">' + obj.label + '</h3>'
+        + (graduated
+            ? '<span class="progress-badge-done">Complete 🎉</span>'
+            : '<span class="progress-stage-badge">Stage ' + (stageIdx + 1) + ' / ' + obj.stages.length + '</span>')
+      + '</div>'
+      + '<p class="progress-stage-name">' + (stage ? stage.label : 'Complete') + '</p>'
+      + '<div class="progress-bar-track"><div class="progress-bar-fill' + (graduated ? ' graduated' : '') + '" style="width:' + pct + '%"></div></div>'
+      + '<div class="progress-meta-row"><span>' + total + ' / ' + obj.targetReps + ' reps total</span>'
+        + '<span>' + (graduated ? 'Goal reached!' : (obj.targetReps - total) + ' to go') + '</span></div>'
+      + '<div class="stage-dots">' + dots + '</div>'
+      + (!graduated ? '<p class="progress-stage-detail">' + stageProgress + ' / ' + (stage ? stage.targetReps : '?') + ' this stage</p>' : '')
+      + '</article>';
+  }).join('');
+
+  observeFadeUps(list);
+}
+
+// ── Feeding ───────────────────────────────────────────────────
+function renderFeeding() {
+  const state = getState();
+  const log = (state.feeding || {})[todayStr()] || {};
+  const user = getCurrentUser();
+  const now = new Date();
+  const list = document.getElementById('feedingList');
+  if (!list) return;
+
+  const dogName = CONFIG.dog.name;
+  setText('feeding-sub', dogName + ' is fed twice a day');
+
+  list.innerHTML = CONFIG.feeding.map(feed => {
+    const entry = log[feed.time] || {};
+    const [fh, fm] = feed.time.split(':').map(Number);
+    const feedTime = new Date(); feedTime.setHours(fh, fm, 0, 0);
+    const overdue = now > feedTime && !entry.fed;
+    const dueNow = Math.abs(now - feedTime) < 30 * 60 * 1000 && !entry.fed;
+
+    let cls = '';
+    if (entry.fed) cls = ' fed';
+    else if (dueNow) cls = ' due-now';
+    else if (overdue) cls = ' overdue';
+
+    return '<article class="feeding-card fade-up' + cls + '">'
+      + '<span class="feeding-icon">🥣</span>'
+      + '<div class="feeding-body">'
+        + '<div class="feeding-row1">'
+          + '<h3 class="feeding-label">' + feed.label + '</h3>'
+          + '<span class="feeding-time">' + feed.time + '</span>'
+        + '</div>'
+        + '<p class="feeding-amount">' + feed.amount + '</p>'
+        + (entry.fed
+            ? '<p class="feeding-done">✓ Fed by ' + entry.by + ' at ' + entry.at + '</p>'
+            : '<button class="btn-feed" onclick="markFed(\'' + feed.time + '\')">Mark as fed</button>')
+        + (dueNow && !entry.fed ? '<p class="feeding-due">⏰ Due now</p>' : '')
+        + (overdue && !entry.fed ? '<p class="feeding-overdue">⚠ Overdue</p>' : '')
+      + '</div>'
+      + '</article>';
+  }).join('');
+
+  observeFadeUps(list);
+}
+
+function markFed(time) {
+  const user = getCurrentUser();
+  const state = getState();
+  const key = todayStr();
+  const feeding = state.feeding || {};
+  if (!feeding[key]) feeding[key] = {};
+  const now = new Date();
+  feeding[key][time] = {
+    fed: true,
+    by: user ? user.name : 'Someone',
+    at: now.toTimeString().slice(0, 5)
+  };
+  saveState({ feeding });
+  renderFeeding();
+}
+
+// ── Calendar ──────────────────────────────────────────────────
+function renderCalendar() {
+  const weekNum = getCurrentWeek();
+  const programStart = new Date(CONFIG.session.programStartDate);
+  const monthsTotal = Math.round((new Date() - programStart) / (1000 * 60 * 60 * 24 * 30));
+  const list = document.getElementById('calendarList');
+  if (!list) return;
+
+  const weeks = Object.entries(SCHEDULE);
+
+  const timelineHTML = weeks.map(([, week], i) => {
+    const wNum = i + 1;
+    const state = wNum < weekNum ? 'past' : wNum === weekNum ? 'current' : 'future';
+    const dotCls = wNum < weekNum ? 'done' : wNum === weekNum ? 'current' : '';
+    const objectives = (week.objectives || [])
+      .map(id => (OBJECTIVES[id] || {}).label || id).join(' · ');
+
+    return '<div class="timeline-week ' + state + ' fade-up">'
+      + '<div class="week-dot ' + dotCls + '"></div>'
+      + '<div class="week-content">'
+        + '<span class="week-num">Week ' + wNum
+          + (wNum === weekNum ? '<span class="week-current-badge">Now</span>' : '')
+        + '</span>'
+        + '<h4 class="week-title">' + week.label + '</h4>'
+        + '<p class="week-focus">' + objectives + '</p>'
+        + (wNum === weekNum && week.trainerNote ? '<p class="week-trainer-note">' + week.trainerNote + '</p>' : '')
+      + '</div>'
+      + '</div>';
+  }).join('');
+
+  list.innerHTML = '<p class="programme-context fade-up">Nova has been training for <strong>' + monthsTotal + ' months</strong> since '
+    + programStart.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) + '.</p>'
+    + '<div class="timeline">' + timelineHTML
+    + '<div class="timeline-week future fade-up"><div class="week-dot"></div><div class="week-content">'
+    + '<span class="week-num">Week ' + (weeks.length + 1) + '+</span>'
+    + '<h4 class="week-title">Coming up</h4>'
+    + '<p class="week-focus">Added by trainer after each session</p>'
+    + '</div></div></div>';
+
+  observeFadeUps(list);
+}
+
+// ── Nav active state ──────────────────────────────────────────
+function initNavObserver() {
+  const links = document.querySelectorAll('.bottom-nav a, .top-nav-links a');
+  const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
-      navLinks.forEach(l => l.classList.remove('active'));
-      const match = document.querySelector(`.bottom-nav a[href="#${e.target.id}"]`);
-      if (match) match.classList.add('active');
+      links.forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('[href="#' + e.target.id + '"]').forEach(l => l.classList.add('active'));
     });
-  }, { threshold: 0.45 });
-  sections.forEach(s => navObserver.observe(s));
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.app-section').forEach(s => obs.observe(s));
+}
 
-  // ── Hero image: load then trigger subtle unzoom ──
-  // Replace the URL below with your actual hero image
-  const HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1527004013197-933b162c4f24?auto=format&fit=crop&w=1800&q=80';
-  const heroBg = document.getElementById('heroBg');
-  const img = new Image();
-  img.onload = () => {
-    heroBg.style.backgroundImage = `url('${img.src}')`;
-    requestAnimationFrame(() => heroBg.classList.add('loaded'));
-  };
-  img.src = HERO_IMAGE_URL;
+// ── Display / ambient mode ────────────────────────────────────
+function initDisplayMode() {
+  if (new URLSearchParams(location.search).get('mode') !== 'display') return;
+  document.body.classList.add('display-mode');
+  const slide = document.getElementById('displaySlide');
+  const dots = document.getElementById('displayDots');
+  const week = getWeekData();
+  const next = getNextSession();
+
+  const slides = [
+    { icon: '🐾', title: CONFIG.dog.name, body: 'Week ' + getCurrentWeek() + ' · ' + week.label, sub: 'Training schedule' },
+    { icon: '🎯', title: "Today's focus", body: week.dailyTasks[0] ? (OBJECTIVES[week.dailyTasks[0].objective] || {}).label || '' : '', sub: week.dailyTasks[0] ? week.dailyTasks[0].instruction : '' },
+    { icon: '🥣', title: 'Feeding', body: CONFIG.feeding.map(f => f.label + ' · ' + f.time + ' · ' + f.amount).join('\n'), sub: '' },
+    { icon: '📅', title: 'Next session', body: next.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }), sub: CONFIG.session.time }
+  ];
+
+  dots.innerHTML = slides.map((_, i) => '<div class="display-dot" id="dot' + i + '"></div>').join('');
+
+  let idx = 0;
+  function showSlide() {
+    const s = slides[idx];
+    slide.innerHTML = '<div class="display-icon">' + s.icon + '</div>'
+      + '<div class="display-title">' + s.title + '</div>'
+      + '<div class="display-body">' + s.body.replace(/\n/g, '<br>') + '</div>'
+      + (s.sub ? '<div class="display-sub">' + s.sub + '</div>' : '')
+      + '<div class="display-dots">' + slides.map((_, i) => '<div class="display-dot' + (i === idx ? ' active' : '') + '"></div>').join('') + '</div>';
+    idx = (idx + 1) % slides.length;
+    setTimeout(showSlide, 8000);
+  }
+  showSlide();
+}
+
+// ── Init ──────────────────────────────────────────────────────
+function init() {
+  renderHeader();
+  renderToday();
+  renderProgress();
+  renderFeeding();
+  renderCalendar();
+  const user = getCurrentUser();
+  if (!user) showPicker();
+}
+
+renderPicker();
+init();
+initNavObserver();
+initDisplayMode();
+setInterval(renderFeeding, 60 * 1000);
 </script>
 </body>
 </html>
