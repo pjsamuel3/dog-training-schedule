@@ -55,7 +55,15 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
   - Completion reward: confetti + discount code from `CONFIG.completionReward`
   - `state.celebrated` tracks first-completion across devices
 
-## Phase 8 — Ongoing
+## Phase 8 — Ongoing ✅
 - [x] Family observation notes — per-objective notes from family members, synced via state.json (PR #12)
 - [x] Journey expandable schedule — tap any week to see planned task instructions; past weeks muted, current auto-expanded, future previewed (PR #13)
 - [x] Update `.github/copilot-instructions.md` with Overview, family notes, and Journey patterns
+
+## Phase 9 — Trainer Mode + Templates
+- [ ] Trainer mode toggle — settings drawer toggle, stored in localStorage, `view-trainer` body class
+- [ ] Trainer mode UI — large type, read-only (no rep buttons, no note forms), Overview first, Feeding hidden
+- [ ] Trainer mode overview — "This week's rep totals" summary row added above objective cards
+- [ ] Template 1 — "This week's plan" copy block (Trainer → Family, top 3 tasks, WhatsApp format)
+- [ ] Template 2 — "Feedback request" copy block (Trainer → Family, 3 questions, WhatsApp format)
+- [ ] Template 3 — In-app feedback form: trainer logs family answers, commits feedback/YYYY-MM-DD.md via GitHub API

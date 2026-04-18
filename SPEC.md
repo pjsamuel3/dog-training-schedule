@@ -215,6 +215,138 @@ All task instructions come from `SCHEDULE[weekN].dailyTasks` — no new data nee
 
 ---
 
+## Trainer Mode
+
+### Purpose
+A simplified, high-contrast, large-type view of the app designed for a less technical trainer to review progress at a glance or demo the app to prospective clients. The trainer should never feel lost or overwhelmed — one thing per screen, big text, obvious layout.
+
+### Toggle
+- A **Trainer mode** toggle in the settings drawer (same drawer as the GitHub PAT UI)
+- Preference stored in `localStorage('nova-trainer-mode')` — persists across page loads
+- Toggle label: "Trainer view" with a brief description: "Simplified layout for trainers"
+- When active, body gets class `view-trainer`; all trainer-mode overrides use this class
+
+### What changes in trainer mode
+
+**Navigation:**
+- Bottom nav reordered: Overview · Journey · Today (Feeding hidden — not relevant to trainer)
+- Overview scrolls into view on load (not Today)
+
+**Visual style — "old person mobile phone" principles:**
+- All body text bumped up one step in the type scale
+- Cards get extra vertical padding and larger touch targets
+- Muted colour palette — less decoration, more data
+- No fade-up animations (distracting on a demo)
+
+**Content removed:**
+- Family observation note forms (`.overview-family-note` textarea and save/cancel buttons) — trainer reads notes but does not write them
+- Rep +/− buttons — trainer views counts, does not log
+- Done toggles on Today task cards — read-only
+- Mark-as-fed buttons on Feeding cards — read-only
+
+**Content added (trainer-only):**
+- A prominent **"This week's rep totals"** summary row at the top of Overview: each objective's reps logged vs target, in plain text (e.g. "Settle · 6 / 20 reps")
+- A **Templates** card at the bottom of the Overview section (see Templates section below)
+
+### What does NOT change
+- All data is live — same `state.json`, same rep counts, same feedback files
+- Journey expandable schedule works identically
+- Settings drawer remains accessible so the trainer can toggle back
+
+---
+
+## Templates
+
+### Purpose
+Reduce friction in the trainer's weekly communication cycle. Two ready-to-send WhatsApp blocks generated from the current week's schedule — one to tell the family what to practise, one to ask how it went. A third flow lets the trainer (or family) fill in answers in-app and commit the result as a `feedback/YYYY-MM-DD.md` file via the GitHub API.
+
+### Location
+A **Templates card** rendered at the bottom of Overview in trainer mode (and accessible via a "Templates" button in the settings drawer in normal mode for the parent role).
+
+---
+
+### Template 1 — This week's plan (Trainer → Family)
+
+A pre-formatted WhatsApp message summarising this week's top 3 tasks.
+
+**Generated from:** `SCHEDULE[weekN].dailyTasks[0..2]` (first 3 tasks only)
+
+**Format (copy-on-tap, monospace preview):**
+```
+🐾 Nova's training this week — Week N
+
+1. [Objective label]
+   [Task instruction]
+   🎯 [reps] reps
+
+2. [Objective label]
+   [Task instruction]
+   🎯 [reps] reps
+
+3. [Objective label]
+   [Task instruction]
+   🎯 [reps] reps
+
+Any questions, just message me!
+```
+
+**UI:** A card with a "Copy to clipboard" button (same pattern as `copyRewardCode`). Shows "Copied!" for 2s on tap.
+
+---
+
+### Template 2 — Feedback request (Trainer → Family)
+
+A pre-formatted WhatsApp questionnaire to send to the family after the week. One question per top-3 task, phrased for a non-technical owner.
+
+**Generated from:** `SCHEDULE[weekN].dailyTasks[0..2]`
+
+**Format (copy-on-tap):**
+```
+Hi! Quick check-in on Nova's training this week 🐾
+
+1. [Objective label] — how many times did you manage to practise, and how did Nova do?
+
+2. [Objective label] — same question — any moments that stood out?
+
+3. [Objective label] — any difficulties, or anything you'd like me to cover in Saturday's session?
+
+Thanks so much!
+```
+
+**UI:** Same card with "Copy to clipboard" button.
+
+---
+
+### Template 3 — In-app feedback form (Trainer fills in owner's answers)
+
+After the family reply on WhatsApp, the trainer reads the answers and logs them in-app. This saves the trainer from opening a code editor.
+
+**UI flow:**
+1. A "Log feedback" button in the Templates card opens a simple form overlay (same style as the PAT settings drawer)
+2. The form shows the date (pre-filled: today, editable), then one labelled textarea per top-3 task:
+   - Label: objective name
+   - Placeholder: "Paste or type the family's response here…"
+3. A **Save to GitHub** button commits a new `feedback/YYYY-MM-DD.md` file via the GitHub API PUT (same mechanism as `state.json` sync)
+4. If a file already exists for that date, the new content is appended (not overwritten)
+
+**Output file format** (`feedback/2026-04-25.md`):
+```markdown
+## [objective-id-1]
+[answer text]
+
+## [objective-id-2]
+[answer text]
+
+## [objective-id-3]
+[answer text]
+```
+
+This matches the existing `feedbackCache` format that the app already parses — no new parsing logic needed.
+
+**Token requirement:** Same GitHub PAT already stored for state.json sync. No additional setup.
+
+---
+
 ## Technical requirements
 
 - Single `index.html` — CSS in `<style>`, JS in `<script>`
