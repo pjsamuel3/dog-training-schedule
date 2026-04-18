@@ -173,6 +173,48 @@ completionReward: {
 
 ---
 
+## Journey — Expandable Schedule
+
+### Purpose
+Let the family (and trainer) browse the full training plan — looking back at what was scheduled in past weeks and previewing what is coming up. Read-only: no rep logging here, that stays in Today and Overview.
+
+### Behaviour
+
+The existing timeline spine stays unchanged. Each week row gains an expand/collapse toggle.
+
+**Default state:**
+- Current week: expanded automatically
+- All other weeks: collapsed (labels only, as today)
+
+**On expand — any week shows:**
+- Trainer note for that week (the same note shown in Today's header for the current week)
+- The daily task cards planned for that week — read-only versions showing:
+  - Objective label + category chip
+  - Task instruction (full text)
+  - Tip (parent view only; hidden for children as per role rules)
+  - Rep target for the task (e.g. "5 reps · Stage 1")
+  - No rep button, no done toggle — purely informational
+
+**Past weeks** get a subtle visual treatment to signal they are history:
+- Muted heading (already done)
+- Task cards rendered at reduced opacity with a "Week N · completed" label
+- No action buttons
+
+**Future weeks** use forward-looking language:
+- Task cards rendered normally (full colour)
+- Label: "Coming up · Week N"
+
+**Current week** is indistinguishable from Today's task list in content, but read-only here (tap Today to actually log).
+
+### Data source
+All task instructions come from `SCHEDULE[weekN].dailyTasks` — no new data needed. Rep targets are `task.reps`. Tip visibility follows the existing role rules (`getUserRole()`).
+
+### What this does NOT show
+- Per-week rep counts — reps are cumulative with no timestamps (KISS). The Overview section shows cumulative progress.
+- Day-by-day done flags — `state.tasks` is keyed by date, not week; surfacing it here adds complexity for little gain.
+
+---
+
 ## Technical requirements
 
 - Single `index.html` — CSS in `<style>`, JS in `<script>`
