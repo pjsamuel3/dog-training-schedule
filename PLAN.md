@@ -44,6 +44,17 @@ Follows the phases in [RECIPE.md](RECIPE.md). Each phase must be complete before
 - [x] `state.json` — initial empty sync file committed
 - [x] `feedback/2026-04-12.md` — example trainer feedback file
 
-## Phase 6 — Future
-- [ ] Token setup UI — settings drawer to paste GitHub PAT without opening console
-- [ ] Feedback submission for family — log observations alongside trainer notes
+## Phase 6 — Sync + Feedback UX ✅
+- [x] Token setup UI — settings drawer to paste GitHub PAT without opening console (PR #10)
+
+## Phase 7 — Overview Dashboard ✅
+- [x] Gamified training Overview tab replaces Progress tab (PR #11)
+  - Hero strip with tier labels and animated progress bar
+  - Category mini-bars (Reactivity / Impulse Control / Tricks / Play)
+  - Objective cards with status badges, stage breakdown, inline rep counter
+  - Completion reward: confetti + discount code from `CONFIG.completionReward`
+  - `state.celebrated` tracks first-completion across devices
+
+## Phase 8 — Ongoing
+- [ ] Family observation notes — per-objective notes from family members, synced via state.json
+- [ ] Update `.github/copilot-instructions.md` with Overview patterns
