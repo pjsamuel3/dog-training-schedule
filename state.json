@@ -24,10 +24,22 @@
         "by": "Pete",
         "at": "13:15"
       }
+    },
+    "2026-04-19": {
+      "16:00": {
+        "fed": true,
+        "by": "Pete",
+        "at": "16:00"
+      },
+      "08:00": {
+        "fed": true,
+        "by": "Pete",
+        "at": "16:00"
+      }
     }
   },
   "celebrated": {},
   "observations": {},
-  "lastSync": "2026-04-19T13:59:38.714Z",
-  "user": "Matteo"
+  "lastSync": "2026-04-18T19:45:41.942Z",
+  "user": "Pete"
 }
