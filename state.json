@@ -1,10 +1,11 @@
 {
   "reps": {
     "less-barking": 5,
-    "chill-out-settle": 1,
-    "less-reactivity-dogs": 4,
+    "chill-out-settle": 2,
+    "less-reactivity-dogs": 8,
     "less-reactivity-people": 1,
-    "less-reactivity-cats-horses": 0
+    "less-reactivity-cats-horses": 0,
+    "fetch-ball": 1
   },
   "tasks": {
     "2026-04-18": {
